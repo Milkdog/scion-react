@@ -191,11 +191,31 @@ class scion extends Component {
   }
 
   renderAbilities() {
-    return abilities.map((ability, index) => {
-      return (
-        <AbilityCard key={index} title={ability.name}/>
+    const groupLength = Math.ceil(abilities.length / 3)
+console.log(groupLength)
+    const abilitiesGroups = []
+
+    for(i = 1; i <= 3; i++) {
+      console.log('Loop')
+      console.log(i) 
+      const sliceStart = (i - 1) * groupLength
+      console.log(sliceStart)
+      const abilitiesGroup = abilities.slice(sliceStart, sliceStart + groupLength)
+
+      const abilityCards = abilitiesGroup.map((ability, index) => {
+        return (
+          <AbilityCard key={index} title={ability.name}/>
+        )
+      })
+
+      abilitiesGroups.push(
+        <View key={i} style={styles.abilityGroup}>
+          {abilityCards}
+        </View>
       )
-    })
+    }
+
+   return abilitiesGroups
   }
 
   render() {
@@ -257,8 +277,13 @@ const styles = StyleSheet.create({
   abilitiesContainer: {
     flex: 1,
     flexWrap: 'wrap',
-    flexDirection: 'column',
-    maxHeight: 260
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  abilityGroup: {
+    flex: 1,
+    flexDirection: 'column'
   }
 });
 
