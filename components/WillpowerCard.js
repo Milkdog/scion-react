@@ -4,12 +4,12 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, AsyncStorage } from 'react-native';
 import Box from './Box.js'
 
-const storagePrefix = '@Attribute:'
+const storagePrefix = '@Willpower:'
 
-export default class AttributeCard extends Component {
+export default class WillpowerCard extends Component {
   static get defaultProps() {
     return {
-      title: 'Attribute'
+      title: 'Willpower'
     };
   }
 
@@ -17,8 +17,8 @@ export default class AttributeCard extends Component {
       super(props)
 
       this.state = {
-          rating: 1,
-          epic: 0
+          rating: 0,
+          tempRating: 0
       }
   }
 
@@ -39,7 +39,7 @@ export default class AttributeCard extends Component {
       })
   }
 
-  onPress(isBoxActive, updateType) {
+  onPressIncrement(isBoxActive, updateType) {
       const change = isBoxActive ? -1 : 1
       const update = {}
       update[updateType] = this.state[updateType] + change
@@ -52,35 +52,26 @@ export default class AttributeCard extends Component {
     for (let i=0; i < 10; i++) {
         const isActive = (i < this.state.rating)
         ratingBoxes.push(
-            <Box key={i} isActive={isActive} isRounded={true} onPress={() => { this.onPress(isActive, 'rating')}} />
+            <Box key={i} isActive={isActive} isRounded={true} onPress={() => { this.onPressIncrement(isActive, 'rating')}} />
         )
     }
 
     return ratingBoxes
   }
 
-  renderEpicgBoxes() {
-    const epicBoxes = []
+  renderTempRatingBoxes() {
+    const ratingBoxes = []
     
     for (let i=0; i < 10; i++) {
-        const isActive = (i < this.state.epic)
-        epicBoxes.push(
-            <Box key={i} isActive={isActive} onPress={() => { this.onPress(isActive, 'epic')}} />
+        const isActive = (i < this.state.tempRating)
+        ratingBoxes.push(
+            <Box key={i} isActive={isActive} onPress={() => { this.onPressIncrement(isActive, 'tempRating')}} />
         )
     }
 
-    return epicBoxes
+    return ratingBoxes
   }
-
-  calculateAutoSuccess() {
-      const {epic} = this.state
-
-      if (epic == 0) {
-          return 0
-      }
-
-      return ((0.5 * Math.pow(epic, 2)) - (0.5 * epic) + 1)
-  }
+  
 
   render() {
     return (
@@ -89,15 +80,12 @@ export default class AttributeCard extends Component {
             <View style={{flex: .5}}>
                 <Text style={styles.title}>{this.props.title}</Text>
             </View>
-            <View style={{flex: .5}}>
-                <Text style={styles.subhead}>Dice: {this.state.rating} + {this.calculateAutoSuccess()}</Text>
-            </View>
         </View>
-        <View style={{flexDirection: 'row'}}>
+        <View style={{flex: 1, flexDirection: 'row'}}>
            {this.renderRatingBoxes()}
         </View>
-        <View style={{flexDirection: 'row', marginTop: 4}}>
-           {this.renderEpicgBoxes()}
+        <View style={{flex: 1, flexDirection: 'row', marginTop: 4}}>
+           {this.renderTempRatingBoxes()}
         </View>
       </View>
     )

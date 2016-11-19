@@ -18,8 +18,9 @@ import {
   ProgressRingWindows
 } from 'react-native-windows'
 import AttributeGroup from './components/AttributeGroup.js'
-import AttributeCard from './components/attributeCard.js'
+import AttributeCard from './components/AttributeCard.js'
 import AbilityCard from './components/AbilityCard.js'
+import WillpowerCard from './components/WillpowerCard.js'
 
 const attributes = [
   {
@@ -159,7 +160,8 @@ class scion extends Component {
     super(props)
 
     this.state = {
-      isLoading: true
+      isLoading: true,
+      isShowEmptyAbilities: true
     }
   }
 
@@ -204,7 +206,7 @@ console.log(groupLength)
 
       const abilityCards = abilitiesGroup.map((ability, index) => {
         return (
-          <AbilityCard key={index} title={ability.name}/>
+          <AbilityCard key={index} showEmpty={this.state.isShowEmptyAbilities} title={ability.name}/>
         )
       })
 
@@ -234,17 +236,26 @@ console.log(groupLength)
     
     return (
       <ScrollView>
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>Attributes</Text>
-        </View>
-        <View style={styles.attributesContainer}>
-          {this.renderAttributes()}
-        </View>
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>Abilties</Text>
-        </View>
-        <View style={styles.abilitiesContainer}>
-          {this.renderAbilities()}
+        <View style={styles.container}>
+          <View style={styles.container}>
+            <View style={styles.titleContainer}>
+              <Text style={styles.title}>Attributes</Text>
+            </View>
+            <View style={styles.attributesContainer}>
+              {this.renderAttributes()}
+            </View>
+          </View>
+          <View style={styles.container}>
+            <View style={styles.titleContainer}>
+              <Text style={styles.title}>Abilties</Text>
+            </View>
+            <View style={styles.abilitiesContainer}>
+              {this.renderAbilities()}
+            </View>
+          </View>
+          <View style={styles.container}>
+            <WillpowerCard />
+          </View>
         </View>
       </ScrollView>
     );
@@ -252,6 +263,8 @@ console.log(groupLength)
 }
 
 const styles = StyleSheet.create({
+  container: {
+  },
   titleContainer: {
     backgroundColor: 'aliceblue',
     paddingVertical: 4,
@@ -262,7 +275,6 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   attributesContainer: {
-    flex: 1,
     flexWrap: 'wrap',
     flexDirection: 'row',
     justifyContent: 'center',
@@ -275,15 +287,15 @@ const styles = StyleSheet.create({
     maxHeight: 260
   },
   abilitiesContainer: {
-    flex: 1,
     flexWrap: 'wrap',
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'flex-start'
   },
   abilityGroup: {
-    flex: 1,
-    flexDirection: 'column'
+    flexDirection: 'column',
+    width: 300,
+    alignItems: 'center'
   }
 });
 

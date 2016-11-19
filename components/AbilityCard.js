@@ -2,14 +2,15 @@
 
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, AsyncStorage } from 'react-native';
-import Box from './box.js'
+import Box from './Box.js'
 
 const storagePrefix = '@Abilities:'
 
 export default class AbilitiesCard extends Component {
   static get defaultProps() {
     return {
-      title: 'Ability'
+      title: 'Ability',
+      showEmpty: true
     };
   }
 
@@ -17,7 +18,8 @@ export default class AbilitiesCard extends Component {
       super(props)
 
       this.state = {
-          rating: 0
+          rating: 0,
+          isFavored: false
       }
   }
 
@@ -38,11 +40,17 @@ export default class AbilitiesCard extends Component {
       })
   }
 
-  onPress(isBoxActive, updateType) {
+  onPressIncrement(isBoxActive, updateType) {
       const change = isBoxActive ? -1 : 1
       const update = {}
       update[updateType] = this.state[updateType] + change
       this.saveData(update)
+  }
+
+  handleToggleFavored() {
+      this.saveData({
+          isFavored: !this.state.isFavored
+      })
   }
 
   renderRatingBoxes() {
@@ -51,17 +59,30 @@ export default class AbilitiesCard extends Component {
     for (let i=0; i < 5; i++) {
         const isActive = (i < this.state.rating)
         ratingBoxes.push(
-            <Box key={i} isActive={isActive} isRounded={true} onPress={() => { this.onPress(isActive, 'rating')}} />
+            <Box key={i} isActive={isActive} isRounded={true} onPress={() => { this.onPressIncrement(isActive, 'rating')}} />
         )
     }
 
     return ratingBoxes
   }
 
+  renderFavoredBox() {
+    return (
+      <Box isActive={this.state.isFavored} onPress={this.handleToggleFavored.bind(this)} />
+    )
+  }
+  
+
   render() {
+    if (!this.props.showEmpty && this.state.rating == 0)
+        return null
+        
     return (
       <View style={styles.container}>
-        <View style={{flex: .5}}>
+        <View style={{flex: .1}}>
+            {this.renderFavoredBox()}
+        </View>
+        <View style={{flex: .4}}>
             <Text style={styles.title}>{this.props.title}</Text>
         </View>
         <View style={{flex: .5}}>
@@ -77,13 +98,11 @@ export default class AbilitiesCard extends Component {
 const styles = StyleSheet.create({
     container: {
         height: 24,
-        flex: 1,
         flexDirection: 'row',
         justifyContent: 'center',
         width: 300
     },
     ratingContainer: {
-        flex: 1,
         flexDirection: 'row'
     },
     title: {
