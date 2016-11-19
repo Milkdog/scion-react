@@ -19,6 +19,7 @@ import {
 } from 'react-native-windows'
 import AttributeGroup from './components/AttributeGroup.js'
 import AttributeCard from './components/attributeCard.js'
+import AbilityCard from './components/AbilityCard.js'
 
 const attributes = [
   {
@@ -74,6 +75,85 @@ const attributes = [
   }
 ]
 
+const abilities = [
+  {
+    name: 'Academics'
+  },
+  {
+    name: 'Animal Ken'
+  },
+  {
+    name: 'Art',
+    options: [
+      'Sculpture',
+      'Painting'
+    ]
+  },
+  {
+    name: 'Athletics'
+  },
+  {
+    name: 'Awareness'
+  },
+  {
+    name: 'Brawl'
+  },
+  {
+    name: 'Command'
+  },
+  {
+    name: 'Control'
+  },
+  {
+    name: 'Craft'
+  },
+  {
+    name: 'Empathy'
+  },
+  {
+    name: 'Fortitude'
+  },
+  {
+    name: 'Integrity'
+  },
+  {
+    name: 'Investigation'
+  },
+  {
+    name: 'Larceny'
+  },
+  {
+    name: 'Marksmanship'
+  },
+  {
+    name: 'Medicine'
+  },
+  {
+    name: 'Melee'
+  },
+  {
+    name: 'Occult'
+  },
+  {
+    name: 'Politics'
+  },
+  {
+    name: 'Presence'
+  },
+  {
+    name: 'Science'
+  },
+  {
+    name: 'Stealth'
+  },
+  {
+    name: 'Survival'
+  },
+  {
+    name: 'Thrown'
+  },
+]
+
 class scion extends Component {
   constructor(props) {
     super(props)
@@ -110,6 +190,14 @@ class scion extends Component {
     })
   }
 
+  renderAbilities() {
+    return abilities.map((ability, index) => {
+      return (
+        <AbilityCard key={index} title={ability.name}/>
+      )
+    })
+  }
+
   render() {
     const routes = [
       {title: 'Home', index: 0},
@@ -129,6 +217,9 @@ class scion extends Component {
         <View style={styles.attributesContainer}>
           {this.renderAttributes()}
         </View>
+        <View style={styles.abilitiesContainer}>
+          {this.renderAbilities()}
+        </View>
       </View>
     );
   }
@@ -144,8 +235,12 @@ const styles = StyleSheet.create({
   },
   attributeGroup: {
     alignItems: 'center',
-    minWidth: 300,
-    height: 260
+    minWidth: 300
+  },
+  abilitiesContainer: {
+    flex: 1,
+    flexWrap: 'wrap',
+    flexDirection: 'column'
   }
 });
 

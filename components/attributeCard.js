@@ -26,7 +26,6 @@ export default class AttributeCard extends Component {
       // Get the state from storage
       const storedState = AsyncStorage.getItem(storagePrefix + this.props.title, (error, result) => {
           if (result !== null) {
-              console.log(this.props.title, result)
               this.setState(JSON.parse(result))
           }
       })
@@ -86,7 +85,7 @@ export default class AttributeCard extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={[{flexDirection: 'row'}, styles.headerContainer]}>
+        <View style={styles.headerContainer}>
             <View style={{flex: .5}}>
                 <Text style={styles.title}>{this.props.title}</Text>
             </View>
@@ -110,6 +109,7 @@ const styles = StyleSheet.create({
         marginTop: 8
     },
     headerContainer: {
+        flexDirection: 'row',
         marginBottom: 4
     },
     title: {

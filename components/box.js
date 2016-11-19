@@ -32,8 +32,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         height: 20,
         width: 20,
-        marginLeft: 4,
-        marginRight: 4
+        marginHorizontal: 4
     },
     rounded: {
         borderRadius: 10
