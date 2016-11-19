@@ -4,12 +4,12 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, AsyncStorage } from 'react-native';
 import Box from './box.js'
 
-const storagePrefix = '@Attribute:'
+const storagePrefix = '@Abilities:'
 
-export default class AttributeCard extends Component {
+export default class AbilitiesCard extends Component {
   static get defaultProps() {
     return {
-      title: 'Attribute'
+      title: 'Ability'
     };
   }
 

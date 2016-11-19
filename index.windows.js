@@ -14,6 +14,9 @@ import {
   TextInput,
   TouchableHighlight
 } from 'react-native'
+import {
+  ProgressRingWindows
+} from 'react-native-windows'
 import AttributeGroup from './components/AttributeGroup.js'
 import AttributeCard from './components/attributeCard.js'
 
@@ -76,8 +79,17 @@ class scion extends Component {
     super(props)
 
     this.state = {
-      text: ''
+      isLoading: true
     }
+  }
+
+  componentDidMount() {
+    // Use getAllKeys as a check for everything else loading
+    AsyncStorage.getAllKeys((error, result) => {
+      this.setState({
+        isLoading: false
+      })
+    })
   }
 
   renderAttributes() {
@@ -103,6 +115,14 @@ class scion extends Component {
       {title: 'Home', index: 0},
       {title: 'Attributes', index: 1},
     ];
+
+    if (this.state.isLoading) {
+      return (
+        <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+          <ProgressRingWindows style={{height: 150, width: 150}} />
+        </View>
+      )
+    }
     
     return (
       <View>
@@ -117,12 +137,15 @@ class scion extends Component {
 const styles = StyleSheet.create({
   attributesContainer: {
     flex: 1,
+    flexWrap: 'wrap',
     flexDirection: 'row',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    alignItems: 'flex-start'
   },
   attributeGroup: {
-    flex: .333,
-    alignItems: 'center'
+    alignItems: 'center',
+    minWidth: 300,
+    height: 260
   }
 });
 
