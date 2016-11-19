@@ -6,9 +6,9 @@ import {
   StyleSheet,
   Text,
   View,
+  ScrollView,
   Button,
   AsyncStorage,
-  ScrollView,
   Image,
   Navigator,
   TextInput,
@@ -213,34 +213,52 @@ class scion extends Component {
     }
     
     return (
-      <View>
+      <ScrollView>
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>Attributes</Text>
+        </View>
         <View style={styles.attributesContainer}>
           {this.renderAttributes()}
+        </View>
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>Abilties</Text>
         </View>
         <View style={styles.abilitiesContainer}>
           {this.renderAbilities()}
         </View>
-      </View>
+      </ScrollView>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  titleContainer: {
+    backgroundColor: 'aliceblue',
+    paddingVertical: 4,
+    marginBottom: 8
+  },
+  title: {
+    fontSize: 18,
+    textAlign: 'center'
+  },
   attributesContainer: {
     flex: 1,
     flexWrap: 'wrap',
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'flex-start'
+    alignItems: 'flex-start',
+    marginBottom: 8
   },
   attributeGroup: {
     alignItems: 'center',
-    minWidth: 300
+    minWidth: 300,
+    maxHeight: 260
   },
   abilitiesContainer: {
     flex: 1,
     flexWrap: 'wrap',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    maxHeight: 260
   }
 });
 
