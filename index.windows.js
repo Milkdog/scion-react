@@ -17,142 +17,31 @@ import {
 import {
   ProgressRingWindows
 } from 'react-native-windows'
-import AttributeGroup from './components/AttributeGroup.js'
-import AttributeCard from './components/AttributeCard.js'
-import AbilityCard from './components/AbilityCard.js'
-import WillpowerCard from './components/WillpowerCard.js'
+import StatsPage from './components/StatsPage.js'
+import BoonsKnacksPage from './components/BoonsKnacksPage.js'
+import TabBar from './components/TabBar.js'
 
-const attributes = [
+const tabs = [
   {
-    groupName: 'Physical',
-    items: [
-      {
-        shortName: 'Str',
-        name: 'Strength'
-      },
-      {
-        shortName: 'Dex',
-        name: 'Dexterity'
-      },
-      {
-        shortName: 'Sta',
-        name: 'Stamina'
-      },
-    ]
+    id: 'stats',
+    name: 'Stats'
   },
   {
-    groupName: 'Social',
-    items: [
-      {
-        shortName: 'Cha',
-        name: 'Charisma'
-      },
-      {
-        shortName: 'Man',
-        name: 'Manipulation'
-      },
-      {
-        shortName: 'App',
-        name: 'Appearance'
-      },
-    ]
+    id: 'boons-knacks',
+    name: 'Boons & Knacks'
   },
   {
-    groupName: 'Mental',
-    items: [
-      {
-        shortName: 'Per',
-        name: 'Perception'
-      },
-      {
-        shortName: 'Int',
-        name: 'Intelligence'
-      },
-      {
-        shortName: 'Wit',
-        name: 'Wits'
-      },
-    ]
+    id: 'brithrights',
+    name: 'Birthrights'
+  },
+  {
+    id: 'combat',
+    name: 'Combat'
+  },
+  {
+    id: 'character',
+    name: 'Character'
   }
-]
-
-const abilities = [
-  {
-    name: 'Academics'
-  },
-  {
-    name: 'Animal Ken'
-  },
-  {
-    name: 'Art',
-    options: [
-      'Sculpture',
-      'Painting'
-    ]
-  },
-  {
-    name: 'Athletics'
-  },
-  {
-    name: 'Awareness'
-  },
-  {
-    name: 'Brawl'
-  },
-  {
-    name: 'Command'
-  },
-  {
-    name: 'Control'
-  },
-  {
-    name: 'Craft'
-  },
-  {
-    name: 'Empathy'
-  },
-  {
-    name: 'Fortitude'
-  },
-  {
-    name: 'Integrity'
-  },
-  {
-    name: 'Investigation'
-  },
-  {
-    name: 'Larceny'
-  },
-  {
-    name: 'Marksmanship'
-  },
-  {
-    name: 'Medicine'
-  },
-  {
-    name: 'Melee'
-  },
-  {
-    name: 'Occult'
-  },
-  {
-    name: 'Politics'
-  },
-  {
-    name: 'Presence'
-  },
-  {
-    name: 'Science'
-  },
-  {
-    name: 'Stealth'
-  },
-  {
-    name: 'Survival'
-  },
-  {
-    name: 'Thrown'
-  },
 ]
 
 class scion extends Component {
@@ -161,7 +50,7 @@ class scion extends Component {
 
     this.state = {
       isLoading: true,
-      isShowEmptyAbilities: true
+      activePage: 'stats'
     }
   }
 
@@ -174,58 +63,33 @@ class scion extends Component {
     })
   }
 
-  renderAttributes() {
-    return attributes.map((group, groupIndex) => {
-      const attributeCards = group.items.map((attribute, index) => {
-        return (
-          <AttributeCard key={index} title={attribute.name} />
-        )
-      })
-
-      return (
-        <View key={groupIndex} style={styles.attributeGroup}>
-          <AttributeGroup title={group.groupName}>
-            {attributeCards}
-          </AttributeGroup>
-        </View>
-      ) 
+  handlePageUpdate(newPage) {
+    this.setState({
+      activePage: newPage
     })
   }
 
-  renderAbilities() {
-    const groupLength = Math.ceil(abilities.length / 3)
-console.log(groupLength)
-    const abilitiesGroups = []
+  getPage() {
+    switch(this.state.activePage) {
+      case 'stats':
+        return <StatsPage />
 
-    for(i = 1; i <= 3; i++) {
-      console.log('Loop')
-      console.log(i) 
-      const sliceStart = (i - 1) * groupLength
-      console.log(sliceStart)
-      const abilitiesGroup = abilities.slice(sliceStart, sliceStart + groupLength)
-
-      const abilityCards = abilitiesGroup.map((ability, index) => {
-        return (
-          <AbilityCard key={index} showEmpty={this.state.isShowEmptyAbilities} title={ability.name}/>
-        )
-      })
-
-      abilitiesGroups.push(
-        <View key={i} style={styles.abilityGroup}>
-          {abilityCards}
-        </View>
-      )
+      case 'boons-knacks':
+        return <BoonsKnacksPage />
     }
+  }
 
-   return abilitiesGroups
+  getTabs() {
+    return tabs.map((tab, index) => {
+      console.log(tab)
+      const tabStyle = tab.id == this.state.activePage ? styles.activeTab : {}
+      return (
+        <Text key={index} style={[styles.tabButton, tabStyle]} onPress={() => {this.handlePageUpdate(tab.id)}}>{tab.name}</Text>
+      )
+    })
   }
 
   render() {
-    const routes = [
-      {title: 'Home', index: 0},
-      {title: 'Attributes', index: 1},
-    ];
-
     if (this.state.isLoading) {
       return (
         <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
@@ -235,68 +99,33 @@ console.log(groupLength)
     }
     
     return (
-      <ScrollView>
-        <View style={styles.container}>
-          <View style={styles.container}>
-            <View style={styles.titleContainer}>
-              <Text style={styles.title}>Attributes</Text>
-            </View>
-            <View style={styles.attributesContainer}>
-              {this.renderAttributes()}
-            </View>
-          </View>
-          <View style={styles.container}>
-            <View style={styles.titleContainer}>
-              <Text style={styles.title}>Abilties</Text>
-            </View>
-            <View style={styles.abilitiesContainer}>
-              {this.renderAbilities()}
-            </View>
-          </View>
-          <View style={styles.container}>
-            <WillpowerCard />
-          </View>
-        </View>
-      </ScrollView>
+      <View style={styles.fullContainer}>
+        <ScrollView style={styles.mainContent}>
+          {this.getPage()}
+        </ScrollView>
+        <TabBar>
+          {this.getTabs()}
+        </TabBar>
+      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-  },
-  titleContainer: {
-    backgroundColor: 'aliceblue',
-    paddingVertical: 4,
-    marginBottom: 8
-  },
-  title: {
-    fontSize: 18,
-    textAlign: 'center'
-  },
-  attributesContainer: {
-    flexWrap: 'wrap',
-    flexDirection: 'row',
+  fullContainer: {
+    flex: 1,
     justifyContent: 'center',
-    alignItems: 'flex-start',
-    marginBottom: 8
-  },
-  attributeGroup: {
-    alignItems: 'center',
-    minWidth: 300,
-    maxHeight: 260
-  },
-  abilitiesContainer: {
-    flexWrap: 'wrap',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'flex-start'
-  },
-  abilityGroup: {
-    flexDirection: 'column',
-    width: 300,
     alignItems: 'center'
+  },
+  mainContent: {
+    
+  },
+  tabButton: {
+    color: '#aaaaaa'
+  },
+  activeTab: {
+    color: 'white'
   }
-});
+})
 
 AppRegistry.registerComponent('scion', () => scion);

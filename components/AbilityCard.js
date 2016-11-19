@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
         height: 24,
         flexDirection: 'row',
         justifyContent: 'center',
-        width: 300
+        width: 280
     },
     ratingContainer: {
         flexDirection: 'row'

@@ -11,7 +11,6 @@ export default class AttributeGroup extends Component {
   }
 
   render() {
-    const buttonColor = this.props.isActive ? 'black' : 'green'
     return (
         <View style={styles.container}>
             <Text style={styles.title}>{this.props.title}</Text>
@@ -23,7 +22,6 @@ export default class AttributeGroup extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         flexDirection: 'column',
         width: 275
     },

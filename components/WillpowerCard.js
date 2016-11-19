@@ -77,14 +77,14 @@ export default class WillpowerCard extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.headerContainer}>
-            <View style={{flex: .5}}>
+            <View>
                 <Text style={styles.title}>{this.props.title}</Text>
             </View>
         </View>
-        <View style={{flex: 1, flexDirection: 'row'}}>
+        <View style={{flexDirection: 'row'}}>
            {this.renderRatingBoxes()}
         </View>
-        <View style={{flex: 1, flexDirection: 'row', marginTop: 4}}>
+        <View style={{flexDirection: 'row', marginTop: 4}}>
            {this.renderTempRatingBoxes()}
         </View>
       </View>

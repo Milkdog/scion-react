@@ -12,7 +12,6 @@ export default class Box extends Component {
   }
 
   render() {
-    const buttonColor = this.props.isActive ? 'black' : 'green'
     return (
         <TouchableOpacity onPress={this.props.onPress}>
             <View style={[
