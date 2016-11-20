@@ -21,6 +21,7 @@ import AttributeGroup from './AttributeGroup.js'
 import AttributeCard from './AttributeCard.js'
 import AbilityCard from './AbilityCard.js'
 import WillpowerCard from './WillpowerCard.js'
+import LegendCard from './LegendCard.js'
 
 const attributes = [
   {
@@ -168,7 +169,12 @@ export default class StatsPage extends Component {
     return attributes.map((group, groupIndex) => {
       const attributeCards = group.items.map((attribute, index) => {
         return (
-          <AttributeCard key={index} title={attribute.name} />
+          <AttributeCard 
+            key={index} 
+            title={attribute.name} 
+            database={this.props.database} 
+            doSave={this.props.doSave.bind(this)} 
+          />
         )
       })
 
@@ -231,7 +237,13 @@ console.log(groupLength)
             </View>
           </View>
           <View style={styles.container}>
-            <WillpowerCard />
+            <View style={styles.titleContainer}>
+              <Text style={styles.title}>Other</Text>
+            </View>
+            <View style={styles.additionalInfoContainer}>
+              <LegendCard />
+              <WillpowerCard />
+            </View>
           </View>
         </View>
       </View>
@@ -273,5 +285,11 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     width: 300,
     alignItems: 'center'
+  },
+  additionalInfoContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
+    alignItems: 'flex-start'
   }
 });

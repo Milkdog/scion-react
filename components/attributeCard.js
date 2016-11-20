@@ -23,19 +23,15 @@ export default class AttributeCard extends Component {
   }
 
   componentDidMount() {
-      // Get the state from storage
-      const storedState = AsyncStorage.getItem(storagePrefix + this.props.title, (error, result) => {
-          if (result !== null) {
-              this.setState(JSON.parse(result))
-          }
-      })
+      const data = this.props.database.child('attribute/' + this.props.title + '/')
+      console.log(data)
   }
 
   saveData(data) {
       this.setState(data, () => {
-        AsyncStorage.setItem(storagePrefix + this.props.title, JSON.stringify(this.state), (error) => {
-            console.log('error', error)
-        })
+          const savePath = 'attribute/' + this.props.title + '/'
+          this.props.doSave(savePath, this.state)
+            AsyncStorage.setItem(storagePrefix + this.props.title, JSON.stringify(this.state))
       })
   }
 
@@ -90,7 +86,7 @@ export default class AttributeCard extends Component {
                 <Text style={styles.title}>{this.props.title}</Text>
             </View>
             <View style={{flex: .5}}>
-                <Text style={styles.subhead}>Dice: {this.state.rating} + {this.calculateAutoSuccess()}</Text>
+                <Text style={styles.subhead}>Dice: {this.state.rating}d + {this.calculateAutoSuccess()}</Text>
             </View>
         </View>
         <View style={{flexDirection: 'row'}}>

@@ -1,5 +1,5 @@
 // @flow
-
+import * as firebase from 'firebase'
 import React, { Component } from 'react'
 import {
   AppRegistry,
@@ -21,6 +21,15 @@ import StatsPage from './components/StatsPage.js'
 import BoonsKnacksPage from './components/BoonsKnacksPage.js'
 import TabBar from './components/TabBar.js'
 
+const firebaseConfig = {
+    apiKey: "AIzaSyC4SXAxLdw91GuxcYP_ys9JTKcTtTyyLxE",
+    authDomain: "scion-character-sheet.firebaseapp.com",
+    databaseURL: "https://scion-character-sheet.firebaseio.com",
+    storageBucket: "scion-character-sheet.appspot.com",
+    messagingSenderId: "266368524623"
+  };
+firebase.initializeApp(firebaseConfig);
+
 const tabs = [
   {
     id: 'stats',
@@ -41,6 +50,11 @@ const tabs = [
   {
     id: 'character',
     name: 'Character'
+  },
+  {
+    id: 'roll-dice',
+    name: 'Roll Dice',
+    isPage: false
   }
 ]
 
@@ -50,11 +64,20 @@ class scion extends Component {
 
     this.state = {
       isLoading: true,
-      activePage: 'stats'
+      activePage: 'stats',
+      database: null
     }
   }
 
   componentDidMount() {
+    firebase.auth().signInAnonymously().catch(function(error) {
+      console.log(error)
+    });
+
+    this.setState({
+      database: firebase.database().ref('/users/').child('test')
+    })
+
     // Use getAllKeys as a check for everything else loading
     AsyncStorage.getAllKeys((error, result) => {
       this.setState({
@@ -69,10 +92,14 @@ class scion extends Component {
     })
   }
 
+  handleSave(savePath, data) {
+    return this.state.database.child(savePath).set(data)
+  }
+
   getPage() {
     switch(this.state.activePage) {
       case 'stats':
-        return <StatsPage />
+        return <StatsPage database={this.state.database} doSave={this.handleSave.bind(this)} />
 
       case 'boons-knacks':
         return <BoonsKnacksPage />
@@ -80,13 +107,23 @@ class scion extends Component {
   }
 
   getTabs() {
-    return tabs.map((tab, index) => {
+    const displayTabs = tabs.map((tab, index) => {
       console.log(tab)
       const tabStyle = tab.id == this.state.activePage ? styles.activeTab : {}
       return (
         <Text key={index} style={[styles.tabButton, tabStyle]} onPress={() => {this.handlePageUpdate(tab.id)}}>{tab.name}</Text>
       )
     })
+
+    displayTabs.push((
+      <Image 
+        key='save' 
+        source={require('./resources/Save-32.png')} 
+        style={styles.tabIcon}
+      />
+    ))
+
+    return displayTabs
   }
 
   render() {
@@ -118,13 +155,19 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   mainContent: {
-    
+    marginBottom: 50,
+    paddingBottom: 20
   },
   tabButton: {
     color: '#aaaaaa'
   },
   activeTab: {
     color: 'white'
+  },
+  tabIcon: {
+    height: 24,
+    width: 24,
+    justifyContent: 'center'
   }
 })
 
