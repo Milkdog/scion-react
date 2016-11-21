@@ -24,20 +24,24 @@ export default class LegendCard extends Component {
   }
 
   componentDidMount() {
-      // Get the state from storage
-      const storedState = AsyncStorage.getItem(storagePrefix + this.props.title, (error, result) => {
-          if (result !== null) {
-              this.setState(JSON.parse(result))
-          }
+      // Load state from DB
+      this.props.database.child(this.getStoragePath()).on('child_added', (snapshotData) => {
+          const value = {}
+          value[snapshotData.key] = snapshotData.val()
+
+          this.setState(value)
       })
+      
   }
 
   saveData(data) {
       this.setState(data, () => {
-        AsyncStorage.setItem(storagePrefix + this.props.title, JSON.stringify(this.state), (error) => {
-            console.log('error', error)
-        })
+          this.props.database.child(this.getStoragePath()).set(this.state)
       })
+  }
+
+  getStoragePath() {
+      return 'legend'
   }
 
   onPressIncrement(isBoxActive, updateType) {
@@ -93,8 +97,8 @@ export default class LegendCard extends Component {
             </View>
             <View style={{flex: .3}}>
                 <TextInput 
-                    value={this.state.points}
-                    onChangeText={(points) => this.handlePointsChange(points)}
+                    defaultValue={this.state.points}
+                    onSubmitEditing={(event) => this.handlePointsChange(event.nativeEvent.text)}
                     style={[styles.pointsInput, this.state.points > this.getAvailablePoints() ? styles.inputWarning : {}]}
                 />
             </View>

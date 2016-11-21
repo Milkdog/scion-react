@@ -4,8 +4,6 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, AsyncStorage } from 'react-native';
 import Box from './Box.js'
 
-const storagePrefix = '@Attribute:'
-
 export default class AttributeCard extends Component {
   static get defaultProps() {
     return {
@@ -23,16 +21,24 @@ export default class AttributeCard extends Component {
   }
 
   componentDidMount() {
-      const data = this.props.database.child('attribute/' + this.props.title + '/')
-      console.log(data)
+      // Load state from DB
+      this.props.database.child(this.getStoragePath()).on('child_added', (snapshotData) => {
+          const value = {}
+          value[snapshotData.key] = snapshotData.val()
+
+          this.setState(value)
+      })
+      
   }
 
   saveData(data) {
       this.setState(data, () => {
-          const savePath = 'attribute/' + this.props.title + '/'
-          this.props.doSave(savePath, this.state)
-            AsyncStorage.setItem(storagePrefix + this.props.title, JSON.stringify(this.state))
+          this.props.database.child(this.getStoragePath()).set(this.state)
       })
+  }
+
+  getStoragePath() {
+      return 'attribute/' + this.props.title
   }
 
   onPress(isBoxActive, updateType) {

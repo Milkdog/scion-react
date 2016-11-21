@@ -24,20 +24,24 @@ export default class AbilitiesCard extends Component {
   }
 
   componentDidMount() {
-      // Get the state from storage
-      const storedState = AsyncStorage.getItem(storagePrefix + this.props.title, (error, result) => {
-          if (result !== null) {
-              this.setState(JSON.parse(result))
-          }
+      // Load state from DB
+      this.props.database.child(this.getStoragePath()).on('child_added', (snapshotData) => {
+          const value = {}
+          value[snapshotData.key] = snapshotData.val()
+
+          this.setState(value)
       })
+      
   }
 
   saveData(data) {
       this.setState(data, () => {
-        AsyncStorage.setItem(storagePrefix + this.props.title, JSON.stringify(this.state), (error) => {
-            console.log('error', error)
-        })
+          this.props.database.child(this.getStoragePath()).set(this.state)
       })
+  }
+
+  getStoragePath() {
+      return 'ability/' + this.props.title
   }
 
   onPressIncrement(isBoxActive, updateType) {

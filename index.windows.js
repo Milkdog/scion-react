@@ -70,19 +70,18 @@ class scion extends Component {
   }
 
   componentDidMount() {
-    firebase.auth().signInAnonymously().catch(function(error) {
+    firebase.auth().signInWithEmailAndPassword('chris@chrismielke.com', 'test123').catch(function(error) {
       console.log(error)
-    });
+    }).then((user) => {
+      console.log('logged in', user.uid)
 
-    this.setState({
-      database: firebase.database().ref('/users/').child('test')
-    })
+      const firebaseDb = firebase.database().ref('/users/').child(user.uid)
 
-    // Use getAllKeys as a check for everything else loading
-    AsyncStorage.getAllKeys((error, result) => {
       this.setState({
+        database: firebaseDb,
         isLoading: false
       })
+
     })
   }
 
@@ -92,14 +91,10 @@ class scion extends Component {
     })
   }
 
-  handleSave(savePath, data) {
-    return this.state.database.child(savePath).set(data)
-  }
-
   getPage() {
     switch(this.state.activePage) {
       case 'stats':
-        return <StatsPage database={this.state.database} doSave={this.handleSave.bind(this)} />
+        return <StatsPage database={this.state.database} />
 
       case 'boons-knacks':
         return <BoonsKnacksPage />
@@ -108,7 +103,6 @@ class scion extends Component {
 
   getTabs() {
     const displayTabs = tabs.map((tab, index) => {
-      console.log(tab)
       const tabStyle = tab.id == this.state.activePage ? styles.activeTab : {}
       return (
         <Text key={index} style={[styles.tabButton, tabStyle]} onPress={() => {this.handlePageUpdate(tab.id)}}>{tab.name}</Text>

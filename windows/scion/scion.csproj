@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProjectGuid>{6f144c51-962c-4348-badd-a0ee9d54e94f}</ProjectGuid>
+    <ProjectGuid>{d467ca2e-3907-4ff8-991d-aa18f7355559}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>scion</RootNamespace>

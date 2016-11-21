@@ -17,6 +17,9 @@ import {
 import {
   ProgressRingWindows
 } from 'react-native-windows'
+
+import Dimensions from 'Dimensions'
+
 import AttributeGroup from './AttributeGroup.js'
 import AttributeCard from './AttributeCard.js'
 import AbilityCard from './AbilityCard.js'
@@ -86,10 +89,7 @@ const abilities = [
   },
   {
     name: 'Art',
-    options: [
-      'Sculpture',
-      'Painting'
-    ]
+    specialty: true
   },
   {
     name: 'Athletics'
@@ -161,7 +161,8 @@ export default class StatsPage extends Component {
     super(props)
 
     this.state = {
-      isShowEmptyAbilities: true
+      isShowEmptyAbilities: true,
+      smallScreen: (Dimensions.get('window').width <= 700)
     }
   }
 
@@ -173,7 +174,6 @@ export default class StatsPage extends Component {
             key={index} 
             title={attribute.name} 
             database={this.props.database} 
-            doSave={this.props.doSave.bind(this)} 
           />
         )
       })
@@ -189,31 +189,16 @@ export default class StatsPage extends Component {
   }
 
   renderAbilities() {
-    const groupLength = Math.ceil(abilities.length / 3)
-console.log(groupLength)
-    const abilitiesGroups = []
-
-    for(i = 1; i <= 3; i++) {
-      console.log('Loop')
-      console.log(i) 
-      const sliceStart = (i - 1) * groupLength
-      console.log(sliceStart)
-      const abilitiesGroup = abilities.slice(sliceStart, sliceStart + groupLength)
-
-      const abilityCards = abilitiesGroup.map((ability, index) => {
-        return (
-          <AbilityCard key={index} showEmpty={this.state.isShowEmptyAbilities} title={ability.name}/>
-        )
-      })
-
-      abilitiesGroups.push(
-        <View key={i} style={styles.abilityGroup}>
-          {abilityCards}
-        </View>
+    return abilities.map((ability, index) => {
+      return (
+        <AbilityCard 
+          key={index} 
+          database={this.props.database} 
+          showEmpty={this.state.isShowEmptyAbilities} 
+          title={ability.name}
+        />
       )
-    }
-
-   return abilitiesGroups
+    })
   }
 
   render() {
@@ -232,7 +217,7 @@ console.log(groupLength)
             <View style={styles.titleContainer}>
               <Text style={styles.title}>Abilties</Text>
             </View>
-            <View style={styles.abilitiesContainer}>
+            <View style={[styles.abilitiesContainer, this.state.smallScreen ? styles.smallScreen : {}]}>
               {this.renderAbilities()}
             </View>
           </View>
@@ -241,8 +226,8 @@ console.log(groupLength)
               <Text style={styles.title}>Other</Text>
             </View>
             <View style={styles.additionalInfoContainer}>
-              <LegendCard />
-              <WillpowerCard />
+              <LegendCard database={this.props.database} />
+              <WillpowerCard database={this.props.database} />
             </View>
           </View>
         </View>
@@ -277,19 +262,18 @@ const styles = StyleSheet.create({
   },
   abilitiesContainer: {
     flexWrap: 'wrap',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'flex-start'
-  },
-  abilityGroup: {
     flexDirection: 'column',
-    width: 300,
-    alignItems: 'center'
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    height: 240
   },
   additionalInfoContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-around',
     alignItems: 'flex-start'
+  },
+  smallScreen: {
+    height: null
   }
 });

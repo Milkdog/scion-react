@@ -7,11 +7,11 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="5dc57170-ead3-4373-aae4-bd3206b14323"
+    Name="819d3999-be65-4a84-82a4-ab8ea659c200"
     Publisher="CN=publisher"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="5dc57170-ead3-4373-aae4-bd3206b14323" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="819d3999-be65-4a84-82a4-ab8ea659c200" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>scion</DisplayName>
