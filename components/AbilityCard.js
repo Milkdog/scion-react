@@ -4,8 +4,6 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, AsyncStorage } from 'react-native';
 import Box from './Box.js'
 
-const storagePrefix = '@Abilities:'
-
 export default class AbilitiesCard extends Component {
   static get defaultProps() {
     return {
@@ -31,7 +29,6 @@ export default class AbilitiesCard extends Component {
 
           this.setState(value)
       })
-      
   }
 
   saveData(data) {
@@ -101,6 +98,7 @@ export default class AbilitiesCard extends Component {
 
 const styles = StyleSheet.create({
     container: {
+        marginHorizontal: 8,
         height: 24,
         flexDirection: 'row',
         justifyContent: 'center',

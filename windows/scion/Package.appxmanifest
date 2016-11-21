@@ -14,7 +14,7 @@
   <mp:PhoneIdentity PhoneProductId="819d3999-be65-4a84-82a4-ab8ea659c200" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>scion</DisplayName>
+    <DisplayName>Scion Character Sheet</DisplayName>
     <PublisherDisplayName>React Native for UWP</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>

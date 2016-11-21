@@ -19,16 +19,26 @@ import {
 } from 'react-native-windows'
 import StatsPage from './components/StatsPage.js'
 import BoonsKnacksPage from './components/BoonsKnacksPage.js'
+import BirthrightsPage from './components/BirthrightsPage.js'
 import TabBar from './components/TabBar.js'
 
 const firebaseConfig = {
-    apiKey: "AIzaSyC4SXAxLdw91GuxcYP_ys9JTKcTtTyyLxE",
-    authDomain: "scion-character-sheet.firebaseapp.com",
-    databaseURL: "https://scion-character-sheet.firebaseio.com",
-    storageBucket: "scion-character-sheet.appspot.com",
-    messagingSenderId: "266368524623"
-  };
-firebase.initializeApp(firebaseConfig);
+  apiKey: "AIzaSyC4SXAxLdw91GuxcYP_ys9JTKcTtTyyLxE",
+  authDomain: "scion-character-sheet.firebaseapp.com",
+  databaseURL: "https://scion-character-sheet.firebaseio.com",
+  storageBucket: "scion-character-sheet.appspot.com",
+  messagingSenderId: "266368524623"
+}
+
+// const firebaseConfig =  {
+//   apiKey: "AIzaSyDsi1gl8812Qm3JBomWUL76TBS9ha2Ejg4",
+//   authDomain: "alternate-project-be493.firebaseapp.com",
+//   databaseURL: "https://alternate-project-be493.firebaseio.com",
+//   storageBucket: "",
+//   messagingSenderId: "598886915971"
+// }
+
+firebase.initializeApp(firebaseConfig)
 
 const tabs = [
   {
@@ -40,7 +50,7 @@ const tabs = [
     name: 'Boons & Knacks'
   },
   {
-    id: 'brithrights',
+    id: 'birthrights',
     name: 'Birthrights'
   },
   {
@@ -70,6 +80,12 @@ class scion extends Component {
   }
 
   componentDidMount() {
+// this.setState({
+//   isLoading: false
+// })
+
+// return null
+
     firebase.auth().signInWithEmailAndPassword('chris@chrismielke.com', 'test123').catch(function(error) {
       console.log(error)
     }).then((user) => {
@@ -85,6 +101,10 @@ class scion extends Component {
     })
   }
 
+  componentWillUnmount() {
+    firebase.auth().signOut()
+  }
+
   handlePageUpdate(newPage) {
     this.setState({
       activePage: newPage
@@ -97,7 +117,10 @@ class scion extends Component {
         return <StatsPage database={this.state.database} />
 
       case 'boons-knacks':
-        return <BoonsKnacksPage />
+        return <BoonsKnacksPage database={this.state.database} />
+
+      case 'birthrights':
+        return <BirthrightsPage database={this.state.database} />
     }
   }
 
@@ -131,7 +154,7 @@ class scion extends Component {
     
     return (
       <View style={styles.fullContainer}>
-        <ScrollView style={styles.mainContent}>
+        <ScrollView style={styles.mainContainer} contentContainerStyle={styles.mainContent}>
           {this.getPage()}
         </ScrollView>
         <TabBar>
@@ -145,11 +168,20 @@ class scion extends Component {
 const styles = StyleSheet.create({
   fullContainer: {
     flex: 1,
+    flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'flex-start'
+  },
+  mainContainer: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    paddingBottom: 20,
+    marginBottom: 50
   },
   mainContent: {
-    marginBottom: 50,
     paddingBottom: 20
   },
   tabButton: {

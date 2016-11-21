@@ -217,8 +217,10 @@ export default class StatsPage extends Component {
             <View style={styles.titleContainer}>
               <Text style={styles.title}>Abilties</Text>
             </View>
-            <View style={[styles.abilitiesContainer, this.state.smallScreen ? styles.smallScreen : {}]}>
-              {this.renderAbilities()}
+            <View style={styles.centerContainer}>
+              <View style={[styles.abilitiesContainer, this.state.smallScreen ? styles.smallScreen : {}]}>
+                {this.renderAbilities()}
+              </View>
             </View>
           </View>
           <View style={styles.container}>
@@ -272,6 +274,9 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'space-around',
     alignItems: 'flex-start'
+  },
+  centerContainer: {
+    alignItems: 'center'
   },
   smallScreen: {
     height: null
