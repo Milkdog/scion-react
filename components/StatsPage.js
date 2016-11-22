@@ -12,7 +12,7 @@ import {
   Image,
   Navigator,
   TextInput,
-  TouchableHighlight
+  TouchableOpacity
 } from 'react-native'
 import {
   ProgressRingWindows
@@ -166,6 +166,12 @@ export default class StatsPage extends Component {
     }
   }
 
+  handleToggleAbilities() {
+    this.setState({
+      isShowEmptyAbilities: !this.state.isShowEmptyAbilities
+    })
+  }
+
   renderAttributes() {
     return attributes.map((group, groupIndex) => {
       const attributeCards = group.items.map((attribute, index) => {
@@ -216,6 +222,9 @@ export default class StatsPage extends Component {
           <View style={styles.container}>
             <View style={styles.titleContainer}>
               <Text style={styles.title}>Abilties</Text>
+              <TouchableOpacity style={styles.button} onPress={this.handleToggleAbilities.bind(this)}>
+                <Text>{this.state.isShowEmptyAbilities ? 'Hide' : 'Show'} Empty</Text>
+              </TouchableOpacity>
             </View>
             <View style={styles.centerContainer}>
               <View style={[styles.abilitiesContainer, this.state.smallScreen ? styles.smallScreen : {}]}>
@@ -280,5 +289,13 @@ const styles = StyleSheet.create({
   },
   smallScreen: {
     height: null
+  },
+  button: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    borderWidth: 1,
+    backgroundColor: 'darkgrey',
+    padding: 4
   }
 });
