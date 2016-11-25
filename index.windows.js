@@ -5,13 +5,8 @@ import {
   AppRegistry,
   Text,
   View,
-  ScrollView,
-  Button,
-  AsyncStorage,
   Image,
-  Navigator,
-  TextInput,
-  TouchableHighlight
+  ScrollView
 } from 'react-native'
 import {
   ProgressRingWindows
@@ -74,6 +69,7 @@ class scion extends Component {
 
     this.state = {
       isLoading: true,
+      isDbConnected: false,
       activePage: 'boons-knacks',
       database: null
     }
@@ -86,18 +82,25 @@ class scion extends Component {
 
 // return null
 
+    // Log user in
     firebase.auth().signInWithEmailAndPassword('chris@chrismielke.com', 'test123').catch(function(error) {
       console.log(error)
     }).then((user) => {
       console.log('logged in', user.uid)
 
+      // Set DB base
       const firebaseDb = firebase.database().ref('/users/').child(user.uid)
-
       this.setState({
         database: firebaseDb,
         isLoading: false
       })
+    })
 
+    // Check DB connection status
+    firebase.database().ref(".info/connected").on("value", (snap) => {
+      this.setState({
+        isDbConnected: (snap.val() === true)
+      }) 
     })
   }
 
@@ -160,6 +163,9 @@ class scion extends Component {
         <TabBar>
           {this.getTabs()}
         </TabBar>
+        <View style={styles.onlineStatusContainer}>
+          {this.state.isDbConnected ? <Text style={styles.goodText}>:)</Text> : <Text style={styles.warningText}>:(</Text>}
+        </View>
       </View>
     );
   }

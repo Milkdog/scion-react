@@ -41,14 +41,18 @@ export default class BoonCard extends Component {
       <View style={styles.cardContainer}>
         <View style={styles.controlContainer}>
           <TouchableOpacity onPress={this.handleDelete.bind(this)}>
-            <Text style={this.state.isDeleteConfirm ? styles.warningText : {}}>X</Text>
+            <View style={styles.controlItem}>
+              <Text style={[styles.controlText, this.state.isDeleteConfirm ? styles.warningText : {}]}>X</Text>
+            </View>
           </TouchableOpacity>
           
           <TouchableOpacity onPress={this.props.onEdit.bind(this)}>
-            <Image 
-              source={require('../resources/Data-Edit-16.png')}
-              style={styles.controlIcon}
-            />
+            <View style={styles.controlItem}>
+              <Image 
+                source={require('../resources/Data-Edit-16.png')}
+                style={styles.controlIcon}
+              />
+            </View>
           </TouchableOpacity>
         </View>
         <Text style={styles.title}>

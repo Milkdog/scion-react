@@ -100,11 +100,25 @@ export const styles = StyleSheet.create({
     top: 4,
     right: 4
   },
+  onlineStatusContainer: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0
+  },
+  controlItem: {
+    padding: 2,
+    marginHorizontal: 4,
+    width: 16,
+    height: 16,
+    backgroundColor: 'lightgrey'
+  },
   controlIcon: {
-    marginTop: 4,
-    marginLeft: 4,
     height: 12,
     width: 12
+  },
+  controlText: {
+    fontSize: 12,
+    textAlign: 'center'
   },
   smallScreen: {
     height: null
@@ -163,6 +177,9 @@ export const styles = StyleSheet.create({
     backgroundColor: 'aliceblue',
     borderWidth: 2,
     borderRadius: 10,
+  },
+  goodText: {
+    color: 'green'
   },
   warningText: {
     color: 'red'
