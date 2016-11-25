@@ -1,7 +1,12 @@
 // @flow
 
 import React, { Component } from 'react'
-import { View, Text, TouchableOpacity } from 'react-native'
+import { 
+  View, 
+  Text, 
+  Image,
+  TouchableOpacity
+} from 'react-native'
 import { styles } from '../resources/Stylesheet.js'
 
 export default class BoonCard extends Component {
@@ -34,9 +39,18 @@ export default class BoonCard extends Component {
   render() {        
     return (
       <View style={styles.cardContainer}>
-        <TouchableOpacity onPress={this.handleDelete.bind(this)}>
-          <Text style={this.state.isDeleteConfirm ? styles.warningText : {}}>X</Text>
-        </TouchableOpacity>
+        <View style={styles.controlContainer}>
+          <TouchableOpacity onPress={this.handleDelete.bind(this)}>
+            <Text style={this.state.isDeleteConfirm ? styles.warningText : {}}>X</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity onPress={this.props.onEdit.bind(this)}>
+            <Image 
+              source={require('../resources/Data-Edit-16.png')}
+              style={styles.controlIcon}
+            />
+          </TouchableOpacity>
+        </View>
         <Text style={styles.title}>
             {this.props.name}
         </Text>

@@ -24,6 +24,8 @@ export default class BoonsKnacksPage extends Component {
       boons: [],
       knacks: [],
       isBoonModalVisible: false,
+      isEdit: false,
+      editIndex: '',
       newBoonName: '',
       newBoonRating: '',
       newBoonPurview: '',
@@ -38,14 +40,21 @@ export default class BoonsKnacksPage extends Component {
   }
 
   getBoonsFromDb() {
-    // Load state from DB
-    this.props.database.child(this.getBoonStoragePath()).on('child_added', (snapshotData) => {
-      const stateBoons = this.state.boons
-      const dbBoons = snapshotData.val()
-      dbBoons.index = snapshotData.key
-      stateBoons.push(dbBoons)
-      this.setState({
-        boons: stateBoons
+    // Clear the boons from the state
+    this.setState({
+      isEdit: false,
+      boons: []
+    }, () => {
+      // Load state from DB
+      this.props.database.child(this.getBoonStoragePath()).orderByChild('purview').on('child_added', (snapshotData) => {
+        const stateBoons = this.state.boons
+        const dbBoons = snapshotData.val()
+        dbBoons.index = snapshotData.key
+        stateBoons.push(dbBoons)
+        this.setState({
+          isEdit: false,
+          boons: stateBoons
+        })
       })
     })
   }
@@ -64,34 +73,59 @@ export default class BoonsKnacksPage extends Component {
 
   handleToggleBoonModal() {
     this.setState({
-      isBoonModalVisible: !this.state.isBoonModalVisible
+      isBoonModalVisible: !this.state.isBoonModalVisible,
+      isEdit: false
     })
   }
 
   handleAddBoon() {
-    const newBoon = this.state.boons
-
-    newBoon.push({
+    const newBoon = [{
       name: this.state.newBoonName,
       rating: this.state.newBoonRating,
       purview: this.state.newBoonPurview,
       dicePool: this.state.newBoonDicePool,
       description: this.state.newBoonDescription
-    })
+    }]
 
     this.setState({
-      boons: newBoon,
+      boons: this.state.boons.concat(newBoon),
       isBoonModalVisible: false
     }, () => {
       this.props.database.child(this.getBoonStoragePath()).set(this.state.boons)
     })
   }
 
+  handleUpdateBoon() {
+    const boon = {
+      name: this.state.newBoonName,
+      rating: this.state.newBoonRating,
+      purview: this.state.newBoonPurview,
+      dicePool: this.state.newBoonDicePool,
+      description: this.state.newBoonDescription
+    }
+
+    this.props.database.child(this.getBoonStoragePath()).child(this.state.editIndex).set(boon)
+    this.getBoonsFromDb()
+    this.setState({
+      isBoonModalVisible: false
+    })
+  }
+
+  handleEditBoon(boon) {
+    this.setState({
+      isBoonModalVisible: true,
+      isEdit: true,
+      editIndex: boon.index,
+      newBoonName: boon.name,
+      newBoonRating: boon.rating,
+      newBoonPurview: boon.purview,
+      newBoonDicePool: boon.dicePool,
+      newBoonDescription: boon.description
+    })
+  }
+
   handleDeleteBoon(index) {
     this.props.database.child(this.getBoonStoragePath()).child(index).remove(() => {
-      this.setState({
-        boons: []
-      })
       this.getBoonsFromDb()
     })
   }
@@ -107,13 +141,13 @@ export default class BoonsKnacksPage extends Component {
 
   renderBoonModal() {
     return (
-      <Modal title='Add Boon' isVisible={this.state.isBoonModalVisible} onCancel={this.handleToggleBoonModal.bind(this)}>
+      <Modal title='Save Boon' isVisible={this.state.isBoonModalVisible} onCancel={this.handleToggleBoonModal.bind(this)}>
         <View style={styles.inputRow}>
           <View style={styles.label}>
             <Text>Name</Text>
           </View>
           <View style={styles.input}>
-            <TextInput onChangeText={(text) => this.setState({newBoonName: text})} />
+            <TextInput defaultValue={this.state.newBoonName} onChangeText={(text) => this.setState({newBoonName: text})} />
           </View>
         </View>
 
@@ -122,7 +156,7 @@ export default class BoonsKnacksPage extends Component {
             <Text>Rating</Text>
           </View>
           <View style={styles.input}>
-            <TextInput onChangeText={(text) => this.setState({newBoonRating: text})} />
+            <TextInput defaultValue={this.state.newBoonRating} onChangeText={(text) => this.setState({newBoonRating: text})} />
           </View>
         </View>
 
@@ -131,7 +165,7 @@ export default class BoonsKnacksPage extends Component {
             <Text>Purviews</Text>
           </View>
           <View style={styles.input}>
-            <TextInput onChangeText={(text) => this.setState({newBoonPurview: text})} />
+            <TextInput defaultValue={this.state.newBoonPurview} onChangeText={(text) => this.setState({newBoonPurview: text})} />
           </View>
         </View>
 
@@ -140,7 +174,7 @@ export default class BoonsKnacksPage extends Component {
             <Text>Dice Pool</Text>
           </View>
           <View style={styles.input}>
-            <TextInput onChangeText={(text) => this.setState({newBoonDicePool: text})} />
+            <TextInput defaultValue={this.state.newBoonDicePool} onChangeText={(text) => this.setState({newBoonDicePool: text})} />
           </View>
         </View>
 
@@ -149,15 +183,15 @@ export default class BoonsKnacksPage extends Component {
             <Text>Description</Text>
           </View>
           <View style={styles.input}>
-            <TextInput onChangeText={(text) => this.setState({newBoonDescription: text})} />
+            <TextInput defaultValue={this.state.newBoonDescription} onChangeText={(text) => this.setState({newBoonDescription: text})} />
           </View>
         </View>
 
         <TouchableOpacity
           style={styles.button}
-          onPress={this.handleAddBoon.bind(this)}
+          onPress={this.state.isEdit ? this.handleUpdateBoon.bind(this) : this.handleAddBoon.bind(this)}
         >
-          <Text>Save Boon</Text>
+          <Text>{this.state.isEdit ? 'Update' : 'Save'} Boon</Text>
         </TouchableOpacity>
       </Modal>
     )
@@ -166,7 +200,12 @@ export default class BoonsKnacksPage extends Component {
   renderBoons() {
     return this.state.boons.map((boon, index) => {
       return (
-        <BoonCard key={index} onDelete={() => {this.handleDeleteBoon(boon.index)}} {...boon} />
+        <BoonCard 
+          key={index} 
+          onDelete={() => {this.handleDeleteBoon(boon.index)}} 
+          onEdit={this.handleEditBoon.bind(this, boon)} 
+          {...boon} 
+        />
       )
     })
   }

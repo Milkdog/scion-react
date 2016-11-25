@@ -94,6 +94,18 @@ export const styles = StyleSheet.create({
     marginTop: 4,
     paddingTop: 4
   },
+  controlContainer: {
+    flexDirection: 'row',
+    position: 'absolute',
+    top: 4,
+    right: 4
+  },
+  controlIcon: {
+    marginTop: 4,
+    marginLeft: 4,
+    height: 12,
+    width: 12
+  },
   smallScreen: {
     height: null
   },
