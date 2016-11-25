@@ -14,6 +14,7 @@ import {
 import { styles } from '../resources/Stylesheet.js'
 
 import BoonsSection from './BoonsSection.js'
+import KnacksSection from './KnacksSection.js'
 
 export default class BoonsKnacksPage extends Component {
   constructor(props) {
@@ -24,11 +25,7 @@ export default class BoonsKnacksPage extends Component {
     return (
       <View style={styles.boonsKnacksContainer}>
         <BoonsSection database={this.props.database} />
-        <View style={styles.splitContainer}>
-          <View style={styles.titleContainer}>
-            <Text style={styles.title}>Knacks</Text>
-          </View>
-        </View>
+        <KnacksSection database={this.props.database} />
       </View>
     )
   }

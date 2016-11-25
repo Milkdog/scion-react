@@ -11,55 +11,52 @@ import {
   TouchableOpacity
 } from 'react-native'
 import { styles } from '../resources/Stylesheet.js'
-import { purviews } from '../resources/Constants.js'
+import { attributes } from '../resources/Constants.js'
 
 import Modal from './Modal.js'
-import BoonCard from './BoonCard.js'
+import KnackCard from './KnackCard.js'
 
-export default class BoonsSection extends Component {
+export default class Knacks extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      boons: [],
+      knacks: [],
       isModalVisible: false,
       isEdit: false,
       editIndex: '',
       newName: '',
-      newRating: '',
       newCost: '',
-      newPurview: '',
-      newDicePool: '',
+      newAttribute: '',
       newDescription: ''
     }
   }
   
   componentDidMount() {
-    this.getBoonsFromDb()
+    this.getKnacksFromDb()
   }
 
-  getBoonsFromDb() {
-    // Clear the boons from the state
+  getKnacksFromDb() {
+    // Clear the knacks from the state
     this.setState({
       isEdit: false,
-      boons: []
+      knacks: []
     }, () => {
       // Load state from DB
-      this.props.database.child(this.getStoragePath()).orderByChild('purview').on('value', (snapshotData) => {
+      this.props.database.child(this.getStoragePath()).orderByChild('epicAttribute').on('value', (snapshotData) => {
+        // If it doesn't exist in the DB, skip it
+        if (snapshotData.val() === null) {
+          return null
+        }
 
-        const boons = snapshotData.val().map((boon, index) => {
-          boon.index = index
-          return boon
-        })
-        
-        // Sort the boons
-        boons.sort(function(a, b) {
-          return a.rating - b.rating
+        const knacks = snapshotData.val().map((knack, index) => {
+          knack.index = index
+          return knack
         })
 
         this.setState({
           isEdit: false,
-          boons: boons
+          knacks: knacks
         })
       })
     })
@@ -75,24 +72,22 @@ export default class BoonsSection extends Component {
   getForm() {
     return {
       name: this.state.newName,
-      rating: this.state.newRating,
       cost: this.state.newCost,
-      purview: this.state.newPurview,
-      dicePool: this.state.newDicePool,
+      attribute: this.state.newAttribute,
       description: this.state.newDescription
     }
   }
 
-  handleAddBoon() {
-    const newBoon = [this.getForm()]
+  handleAddKnack() {
+    const newKnack = [this.getForm()]
 
-    this.props.database.child(this.getStoragePath()).set(this.state.boons.concat(newBoon))
+    this.props.database.child(this.getStoragePath()).set(this.state.knacks.concat(newKnack))
     this.setState({
       isModalVisible: false
     })
   }
 
-  handleUpdateBoon() {
+  handleUpdateKnack() {
     this.props.database.child(this.getStoragePath()).child(this.state.editIndex).set(this.getForm())
 
     this.setState({
@@ -100,37 +95,34 @@ export default class BoonsSection extends Component {
     })
   }
 
-  handleEditBoon(boon) {
+  handleEditKnack(knack) {
     this.setState({
       isModalVisible: true,
       isEdit: true,
-      editIndex: boon.index,
-      newName: boon.name,
-      newRating: boon.rating,
-      newCost: boon.cost,
-      newPurview: boon.purview,
-      newDicePool: boon.dicePool,
-      newDescription: boon.description
+      editIndex: knack.index,
+      newName: knack.name,
+      newAttribute: knack.epicAttribute,
+      newDescription: knack.description
     })
   }
 
-  handleDeleteBoon(index) {
+  handleDeleteKnack(index) {
     this.props.database.child(this.getStoragePath()).child(index).remove()
   }
 
   getStoragePath() {
-      return 'boons'
+      return 'knacks'
   }
 
-  renderPurviewPickerItems() {
-    return purviews.map((purview, index) => {
-      return <Picker.Item key={index} label={purview} value={purview} />
+  renderAttributePickerItems() {
+    return attributes.map((attribute, index) => {
+      return <Picker.Item key={index} label={attribute} value={attribute} />
     })
   }
 
   renderModal() {
     return (
-      <Modal title='Save Boon' isVisible={this.state.isModalVisible} onCancel={this.handleToggleModal.bind(this)}>
+      <Modal title='Save Knack' isVisible={this.state.isModalVisible} onCancel={this.handleToggleModal.bind(this)}>
         <View style={styles.inputRow}>
           <View style={styles.label}>
             <Text>Name</Text>
@@ -142,23 +134,14 @@ export default class BoonsSection extends Component {
 
         <View style={styles.inputRow}>
           <View style={styles.label}>
-            <Text>Purview</Text>
+            <Text>Epic Attribute</Text>
           </View>
           <View style={styles.input}>
             <Picker
-              selectedValue={this.state.newPurview}
-              onValueChange={(text) => this.setState({newPurview: text})}>
-              {this.renderPurviewPickerItems()}
+              selectedValue={this.state.newAttribute}
+              onValueChange={(text) => this.setState({newAttribute: text})}>
+              {this.renderAttributePickerItems()}
             </Picker>
-          </View>
-        </View>
-
-        <View style={styles.inputRow}>
-          <View style={styles.label}>
-            <Text>Rating</Text>
-          </View>
-          <View style={styles.input}>
-            <TextInput defaultValue={this.state.newRating} onChangeText={(text) => this.setState({newRating: text})} />
           </View>
         </View>
 
@@ -173,15 +156,6 @@ export default class BoonsSection extends Component {
 
         <View style={styles.inputRow}>
           <View style={styles.label}>
-            <Text>Dice Pool</Text>
-          </View>
-          <View style={styles.input}>
-            <TextInput defaultValue={this.state.newDicePool} onChangeText={(text) => this.setState({newDicePool: text})} />
-          </View>
-        </View>
-
-        <View style={styles.inputRow}>
-          <View style={styles.label}>
             <Text>Description</Text>
           </View>
           <View style={styles.input}>
@@ -191,22 +165,22 @@ export default class BoonsSection extends Component {
 
         <TouchableOpacity
           style={styles.button}
-          onPress={this.state.isEdit ? this.handleUpdateBoon.bind(this) : this.handleAddBoon.bind(this)}
+          onPress={this.state.isEdit ? this.handleUpdateKnack.bind(this) : this.handleAddKnack.bind(this)}
         >
-          <Text>{this.state.isEdit ? 'Update' : 'Save'} Boon</Text>
+          <Text>{this.state.isEdit ? 'Update' : 'Save'} Knack</Text>
         </TouchableOpacity>
       </Modal>
     )
   }
 
-  renderBoons() {
-    return this.state.boons.map((boon, index) => {
+  renderKnacks() {
+    return this.state.knacks.map((knack, index) => {
       return (
-        <BoonCard 
+        <KnackCard 
           key={index} 
-          onDelete={() => {this.handleDeleteBoon(boon.index)}} 
-          onEdit={this.handleEditBoon.bind(this, boon)} 
-          {...boon} 
+          onDelete={() => {this.handleDeleteKnack(knack.index)}} 
+          onEdit={this.handleEditKnack.bind(this, knack)} 
+          {...knack} 
         />
       )
     })
@@ -217,13 +191,13 @@ export default class BoonsSection extends Component {
       <View style={styles.splitContainer}>
         {this.renderModal()}
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>Boons</Text>
+          <Text style={styles.title}>Knacks</Text>
           <TouchableOpacity style={[styles.button, styles.titleBarButton]} onPress={this.handleToggleModal.bind(this)}>
             <Text>Add</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.cardList}>
-          {this.renderBoons()}
+          {this.renderKnacks()}
         </View>
       </View>
     )
