@@ -3,7 +3,6 @@
 import React, { Component } from 'react'
 import {
   AppRegistry,
-  StyleSheet,
   View,
   Text,
   TextInput,
@@ -12,6 +11,8 @@ import {
 import {
   ProgressRingWindows
 } from 'react-native-windows'
+
+import { styles } from '../resources/Stylesheet.js'
 
 import BirthrightCard from './BirthrightCard.js'
 import Modal from './Modal.js'
@@ -139,7 +140,7 @@ export default class BirthrightsPage extends Component {
       <View style={styles.container}>
         {this.renderModal()}
         <TouchableOpacity
-          style={styles.button}
+          style={[styles.button, styles.addBirthrightButton]}
           onPress={this.handleTriggerBirthrightModal.bind(this)}
         >
           <Text>Add Birthright</Text>
@@ -151,66 +152,3 @@ export default class BirthrightsPage extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    paddingBottom: 12,
-    textAlign: 'center'
-  },
-  button: {
-    padding: 8,
-    marginVertical: 8,
-    backgroundColor: '#CCCCCC',
-    width: 200,
-    alignSelf: 'flex-end'
-  },
-  birthrightList: {
-    flexDirection: 'row',
-    flexWrap: 'wrap'
-  },
-  inputRow: {
-    flex: 1,
-    flexDirection: 'row'
-  },
-  label: {
-    flex: .3
-  },
-  input: {
-    flex: .7
-  },
-  modalContainer: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    zIndex: 100
-  },
-  modalBackground: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-    //backgroundColor: 'black',
-    opacity: .5
-  },
-  modal: {
-    top: 100,
-    width: 500,
-    padding: 20,
-    backgroundColor: 'aliceblue',
-    borderWidth: 2,
-    borderRadius: 10,
-  }
-});

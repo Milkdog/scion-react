@@ -3,7 +3,6 @@ import * as firebase from 'firebase'
 import React, { Component } from 'react'
 import {
   AppRegistry,
-  StyleSheet,
   Text,
   View,
   ScrollView,
@@ -17,6 +16,7 @@ import {
 import {
   ProgressRingWindows
 } from 'react-native-windows'
+import { styles } from './resources/Stylesheet.js'
 import StatsPage from './components/StatsPage.js'
 import BoonsKnacksPage from './components/BoonsKnacksPage.js'
 import BirthrightsPage from './components/BirthrightsPage.js'
@@ -74,7 +74,7 @@ class scion extends Component {
 
     this.state = {
       isLoading: true,
-      activePage: 'stats',
+      activePage: 'boons-knacks',
       database: null
     }
   }
@@ -164,37 +164,5 @@ class scion extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  fullContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'flex-start'
-  },
-  mainContainer: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-    paddingBottom: 20,
-    marginBottom: 50
-  },
-  mainContent: {
-    paddingBottom: 20
-  },
-  tabButton: {
-    color: '#aaaaaa'
-  },
-  activeTab: {
-    color: 'white'
-  },
-  tabIcon: {
-    height: 24,
-    width: 24,
-    justifyContent: 'center'
-  }
-})
 
 AppRegistry.registerComponent('scion', () => scion);

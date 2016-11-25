@@ -3,7 +3,6 @@
 import React, { Component } from 'react'
 import {
   AppRegistry,
-  StyleSheet,
   Text,
   View,
   ScrollView,
@@ -19,6 +18,7 @@ import {
 } from 'react-native-windows'
 
 import Dimensions from 'Dimensions'
+import { styles } from '../resources/Stylesheet.js'
 
 import AttributeGroup from './AttributeGroup.js'
 import AttributeCard from './AttributeCard.js'
@@ -222,7 +222,7 @@ export default class StatsPage extends Component {
           <View style={styles.container}>
             <View style={styles.titleContainer}>
               <Text style={styles.title}>Abilties</Text>
-              <TouchableOpacity style={styles.button} onPress={this.handleToggleAbilities.bind(this)}>
+              <TouchableOpacity style={[styles.button, styles.titleBarButton]} onPress={this.handleToggleAbilities.bind(this)}>
                 <Text>{this.state.isShowEmptyAbilities ? 'Hide' : 'Show'} Empty</Text>
               </TouchableOpacity>
             </View>
@@ -246,56 +246,3 @@ export default class StatsPage extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-  },
-  titleContainer: {
-    backgroundColor: 'aliceblue',
-    paddingVertical: 4,
-    marginBottom: 8
-  },
-  title: {
-    fontSize: 18,
-    textAlign: 'center'
-  },
-  attributesContainer: {
-    flexWrap: 'wrap',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-    marginBottom: 8
-  },
-  attributeGroup: {
-    alignItems: 'center',
-    minWidth: 300,
-    maxHeight: 260
-  },
-  abilitiesContainer: {
-    flexWrap: 'wrap',
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    height: 240
-  },
-  additionalInfoContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-around',
-    alignItems: 'flex-start'
-  },
-  centerContainer: {
-    alignItems: 'center'
-  },
-  smallScreen: {
-    height: null
-  },
-  button: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    borderWidth: 1,
-    backgroundColor: 'darkgrey',
-    padding: 4
-  }
-});

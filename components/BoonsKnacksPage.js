@@ -1,22 +1,18 @@
 // @flow
 
 import React, { Component } from 'react'
-import {
-  AppRegistry,
-  StyleSheet,
+import {  
   Text,
   View,
-  ScrollView,
   Button,
-  AsyncStorage,
-  Image,
-  Navigator,
   TextInput,
-  TouchableHighlight
+  TouchableOpacity
 } from 'react-native'
 import {
   ProgressRingWindows
 } from 'react-native-windows'
+import { styles } from '../resources/Stylesheet.js'
+
 import AttributeGroup from './AttributeGroup.js'
 import AttributeCard from './AttributeCard.js'
 import AbilityCard from './AbilityCard.js'
@@ -31,48 +27,27 @@ export default class BoonsKnacksPage extends Component {
     }
   }
 
+  handleAddBoon() {
+    
+  }
+
   render() {
     return (
-      <View>
-        <Text>Boons & Knacks</Text>
+      <View style={styles.boonsKnacksContainer}>
+        <View style={styles.splitContainer}>
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>Boons</Text>
+            <TouchableOpacity style={[styles.button, styles.titleBarButton]} onPress={this.handleAddBoon.bind(this)}>
+              <Text>Add</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View style={styles.splitContainer}>
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>Knacks</Text>
+          </View>
+        </View>
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-  },
-  titleContainer: {
-    backgroundColor: 'aliceblue',
-    paddingVertical: 4,
-    marginBottom: 8
-  },
-  title: {
-    fontSize: 18,
-    textAlign: 'center'
-  },
-  attributesContainer: {
-    flexWrap: 'wrap',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-    marginBottom: 8
-  },
-  attributeGroup: {
-    alignItems: 'center',
-    minWidth: 300,
-    maxHeight: 260
-  },
-  abilitiesContainer: {
-    flexWrap: 'wrap',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'flex-start'
-  },
-  abilityGroup: {
-    flexDirection: 'column',
-    width: 300,
-    alignItems: 'center'
-  }
-});
