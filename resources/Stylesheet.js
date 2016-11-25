@@ -81,6 +81,19 @@ export const styles = StyleSheet.create({
     flex: .5,
     paddingHorizontal: 12
   },
+  cardContainer: {
+    margin: 8,
+    padding: 8,
+    width: 280,
+    borderWidth: 2,
+    borderColor: 'lightblue',
+    borderRadius: 4
+  },
+  descriptionContainer: {
+    borderTopWidth: 1,
+    marginTop: 4,
+    paddingTop: 4
+  },
   smallScreen: {
     height: null
   },
@@ -98,7 +111,7 @@ export const styles = StyleSheet.create({
     width: 200,
     alignSelf: 'flex-end'
   },
-  birthrightList: {
+  cardList: {
     flexDirection: 'row',
     flexWrap: 'wrap'
   },
@@ -138,5 +151,8 @@ export const styles = StyleSheet.create({
     backgroundColor: 'aliceblue',
     borderWidth: 2,
     borderRadius: 10,
+  },
+  warningText: {
+    color: 'red'
   }
 })

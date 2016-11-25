@@ -145,7 +145,7 @@ export default class BirthrightsPage extends Component {
         >
           <Text>Add Birthright</Text>
         </TouchableOpacity>
-        <View style={styles.birthrightList}>
+        <View style={styles.cardList}>
           {this.renderBirthrights()}
         </View>
       </View>
