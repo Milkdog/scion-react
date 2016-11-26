@@ -6,12 +6,15 @@ import {
   Text,
   View,
   Image,
-  ScrollView
+  TouchableOpacity,
+  ScrollView,
+  AsyncStorage
 } from 'react-native'
 import {
   ProgressRingWindows
 } from 'react-native-windows'
 import { styles } from './resources/Stylesheet.js'
+import SelectCharacterPage from './components/SelectCharacterPage.js'
 import StatsPage from './components/StatsPage.js'
 import BoonsKnacksPage from './components/BoonsKnacksPage.js'
 import BirthrightsPage from './components/BirthrightsPage.js'
@@ -64,6 +67,8 @@ const tabs = [
   }
 ]
 
+const storageCharacterKey = '@scion:character'
+
 class scion extends Component {
   constructor(props) {
     super(props)
@@ -71,28 +76,42 @@ class scion extends Component {
     this.state = {
       isLoading: true,
       isDbConnected: false,
-      activePage: 'combat',
-      database: null
+      activePage: 'stats',
+      dbRoot: null,
+      database: null,
+      character: null
     }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
 // this.setState({
 //   isLoading: false
 // })
 
 // return null
 
+    await AsyncStorage.getItem(storageCharacterKey, (error, value) => {
+      this.setState({
+        character: value
+      })
+    })
+
     // Log user in
     firebase.auth().signInWithEmailAndPassword('chris@chrismielke.com', 'test123').catch(function(error) {
-      console.log(error)
+      console.log('Auth error', error)
     }).then((user) => {
-      console.log('logged in', user.uid)
+      console.log('Logged in', user.uid)
 
       // Set DB base
-      const firebaseDb = firebase.database().ref('/users/').child(user.uid)
+      const dbRoot = firebase.database().ref('/users/').child(user.uid)
+      let database = dbRoot
+      if (this.state.character) {
+        database = dbRoot.child(this.state.character)
+      }
+
       this.setState({
-        database: firebaseDb,
+        dbRoot,
+        database,
         isLoading: false
       })
     })
@@ -115,7 +134,20 @@ class scion extends Component {
     })
   }
 
+  setCharacter(character) {
+    AsyncStorage.setItem(storageCharacterKey, character)
+
+    this.setState({
+      character,
+      database: this.state.dbRoot.child(character)
+    })
+  }
+
   getPage() {
+    if (this.state.character === null) {
+      return <SelectCharacterPage doSetCharacter={this.setCharacter.bind(this)} database={this.state.dbRoot} />
+    }
+
     switch(this.state.activePage) {
       case 'stats':
         return <StatsPage database={this.state.database} />
@@ -140,12 +172,19 @@ class scion extends Component {
     })
 
     displayTabs.push((
-      <Image 
-        key='save' 
-        source={require('./resources/Save-32.png')} 
-        style={styles.tabIcon}
-      />
+      <TouchableOpacity key='change-character' onPress={() => {this.setState({character: null})}}>
+        <Text style={[styles.tabButton, styles.tabSelectedCharacter]}>{this.state.character}</Text>
+        <Text style={styles.tabButton}>Change Character</Text>
+      </TouchableOpacity>
     ))
+
+    // displayTabs.push((
+    //   <Image 
+    //     key='save' 
+    //     source={require('./resources/Save-32.png')} 
+    //     style={styles.tabIcon}
+    //   />
+    // ))
 
     return displayTabs
   }

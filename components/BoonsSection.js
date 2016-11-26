@@ -136,7 +136,7 @@ export default class BoonsSection extends Component {
             <Text>Name</Text>
           </View>
           <View style={styles.input}>
-            <TextInput defaultValue={this.state.newName} onChangeText={(text) => this.setState({newName: text})} />
+            <TextInput defaultValue={this.state.newName} selectTextOnFocus={true} onChangeText={(text) => this.setState({newName: text})} />
           </View>
         </View>
 
@@ -158,7 +158,7 @@ export default class BoonsSection extends Component {
             <Text>Rating</Text>
           </View>
           <View style={styles.input}>
-            <TextInput defaultValue={this.state.newRating} onChangeText={(text) => this.setState({newRating: text})} />
+            <TextInput defaultValue={this.state.newRating} selectTextOnFocus={true} onChangeText={(text) => this.setState({newRating: text})} />
           </View>
         </View>
 
@@ -167,7 +167,7 @@ export default class BoonsSection extends Component {
             <Text>Cost</Text>
           </View>
           <View style={styles.input}>
-            <TextInput defaultValue={this.state.newCost} onChangeText={(text) => this.setState({newCost: text})} />
+            <TextInput defaultValue={this.state.newCost} selectTextOnFocus={true} onChangeText={(text) => this.setState({newCost: text})} />
           </View>
         </View>
 
@@ -176,7 +176,7 @@ export default class BoonsSection extends Component {
             <Text>Dice Pool</Text>
           </View>
           <View style={styles.input}>
-            <TextInput defaultValue={this.state.newDicePool} onChangeText={(text) => this.setState({newDicePool: text})} />
+            <TextInput defaultValue={this.state.newDicePool} selectTextOnFocus={true} onChangeText={(text) => this.setState({newDicePool: text})} />
           </View>
         </View>
 
@@ -185,7 +185,7 @@ export default class BoonsSection extends Component {
             <Text>Description</Text>
           </View>
           <View style={styles.input}>
-            <TextInput defaultValue={this.state.newDescription} onChangeText={(text) => this.setState({newDescription: text})} />
+            <TextInput defaultValue={this.state.newDescription} selectTextOnFocus={true} onChangeText={(text) => this.setState({newDescription: text})} />
           </View>
         </View>
 

@@ -25,6 +25,7 @@ import AttributeCard from './AttributeCard.js'
 import AbilityCard from './AbilityCard.js'
 import WillpowerCard from './WillpowerCard.js'
 import LegendCard from './LegendCard.js'
+import ExperienceCard from './ExperienceCard.js'
 
 const attributes = [
   {
@@ -239,6 +240,7 @@ export default class StatsPage extends Component {
             <View style={styles.additionalInfoContainer}>
               <LegendCard database={this.props.database} />
               <WillpowerCard database={this.props.database} />
+              <ExperienceCard database={this.props.database} />
             </View>
           </View>
         </View>

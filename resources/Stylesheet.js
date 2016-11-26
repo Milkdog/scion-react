@@ -26,7 +26,8 @@ export const styles = StyleSheet.create({
     left: 0
   },
   tabButton: {
-    color: '#aaaaaa'
+    color: '#aaaaaa',
+    textAlign: 'center'
   },
   activeTab: {
     color: 'white'
@@ -35,6 +36,9 @@ export const styles = StyleSheet.create({
     height: 24,
     width: 24,
     justifyContent: 'center'
+  },
+  tabSelectedCharacter: {
+    fontWeight: 'bold'
   },
   titleContainer: {
     backgroundColor: 'aliceblue',
@@ -87,6 +91,11 @@ export const styles = StyleSheet.create({
   },
   splitContainer: {
     flex: .5
+  },
+  selectCharacterContainer: {
+    width: 300,
+    marginBottom: 20,
+    alignSelf: 'center'
   },
   column: {
     paddingHorizontal: 12
@@ -160,6 +169,17 @@ export const styles = StyleSheet.create({
   },
   input: {
     flex: .7
+  },
+  cardInput: {
+    width: 60,
+    marginTop: -4,
+    marginHorizontal: 8
+  },
+  warnInput: {
+    borderColor: 'orange'
+  },
+  errorInput: {
+    borderColor: 'red'
   },
   modalContainer: {
     position: 'absolute',

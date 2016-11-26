@@ -25,11 +25,8 @@ export default class LegendCard extends Component {
 
   componentDidMount() {
       // Load state from DB
-      this.props.database.child(this.getStoragePath()).on('child_added', (snapshotData) => {
-          const value = {}
-          value[snapshotData.key] = snapshotData.val()
-
-          this.setState(value)
+      this.props.database.child(this.getStoragePath()).on('value', (snapshotData) => {
+          this.setState(snapshotData.val())
       })
       
   }
