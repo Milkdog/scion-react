@@ -16,7 +16,7 @@ import { attributes } from '../resources/Constants.js'
 import Modal from './Modal.js'
 import KnackCard from './KnackCard.js'
 
-export default class Knacks extends Component {
+export default class KnacksSection extends Component {
   constructor(props) {
     super(props)
 
@@ -188,7 +188,7 @@ export default class Knacks extends Component {
 
   render() {
     return (
-      <View style={styles.splitContainer}>
+      <View style={[styles.splitContainer, styles.column]}>
         {this.renderModal()}
         <View style={styles.titleContainer}>
           <Text style={styles.title}>Knacks</Text>

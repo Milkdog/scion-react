@@ -214,7 +214,7 @@ export default class BoonsSection extends Component {
 
   render() {
     return (
-      <View style={styles.splitContainer}>
+      <View style={[styles.splitContainer, styles.column]}>
         {this.renderModal()}
         <View style={styles.titleContainer}>
           <Text style={styles.title}>Boons</Text>

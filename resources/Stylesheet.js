@@ -46,6 +46,11 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center'
   },
+  cardTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'left'
+  },
   attributesContainer: {
     flexWrap: 'wrap',
     flexDirection: 'row',
@@ -77,8 +82,13 @@ export const styles = StyleSheet.create({
   boonsKnacksContainer: {
     flexDirection: 'row'
   },
+  weaponArmorContainer: {
+    flexDirection: 'column'
+  },
   splitContainer: {
-    flex: .5,
+    flex: .5
+  },
+  column: {
     paddingHorizontal: 12
   },
   cardContainer: {

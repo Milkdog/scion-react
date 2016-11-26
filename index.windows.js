@@ -15,6 +15,7 @@ import { styles } from './resources/Stylesheet.js'
 import StatsPage from './components/StatsPage.js'
 import BoonsKnacksPage from './components/BoonsKnacksPage.js'
 import BirthrightsPage from './components/BirthrightsPage.js'
+import CombatPage from './components/CombatPage.js'
 import TabBar from './components/TabBar.js'
 
 const firebaseConfig = {
@@ -70,7 +71,7 @@ class scion extends Component {
     this.state = {
       isLoading: true,
       isDbConnected: false,
-      activePage: 'boons-knacks',
+      activePage: 'combat',
       database: null
     }
   }
@@ -124,6 +125,9 @@ class scion extends Component {
 
       case 'birthrights':
         return <BirthrightsPage database={this.state.database} />
+
+      case 'combat':
+        return <CombatPage database={this.state.database} />
     }
   }
 
