@@ -12,8 +12,7 @@ import { styles } from '../resources/Stylesheet.js'
 export default class ExperienceCard extends Component {
   static get defaultProps() {
     return {
-      title: 'Experience',
-      isLoaded: false
+      title: 'Experience'
     };
   }
 
@@ -21,6 +20,7 @@ export default class ExperienceCard extends Component {
     super(props)
 
     this.state = {
+      isLoaded: false,
       total: '0',
       spent: '0'
     }

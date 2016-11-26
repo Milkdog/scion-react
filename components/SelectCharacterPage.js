@@ -63,7 +63,7 @@ export default class SelectCharacterPage extends Component {
   render() {
     return (
       <View>
-        <View style={styles.selectCharacterContainer}>
+        <View style={styles.characterPageContainer}>
           <View style={styles.titleContainer}>
             <Text style={styles.title}>Select Character</Text>
           </View>

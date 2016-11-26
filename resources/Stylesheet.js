@@ -92,7 +92,7 @@ export const styles = StyleSheet.create({
   splitContainer: {
     flex: .5
   },
-  selectCharacterContainer: {
+  characterPageContainer: {
     width: 300,
     marginBottom: 20,
     alignSelf: 'center'
