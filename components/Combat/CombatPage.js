@@ -11,7 +11,7 @@ import {
 import {
   ProgressRingWindows
 } from 'react-native-windows'
-import { styles } from '../resources/Stylesheet.js'
+import { styles } from '../../resources/Stylesheet.js'
 
 import WeaponsSection from './WeaponsSection.js'
 import ArmorSection from './ArmorSection.js'

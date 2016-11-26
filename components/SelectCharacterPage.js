@@ -49,8 +49,8 @@ export default class SelectCharacterPage extends Component {
     this.props.doSetCharacter(this.state.selectedCharacter)
   }
 
-  handleCreateCharacter() {
-    this.props.database.child(this.state.selectedCharacter).set({character: {name: this.state.selectedCharacter}})
+  async handleCreateCharacter() {
+    await this.props.database.child(this.state.selectedCharacter).set({character: {name: this.state.selectedCharacter}})
     this.handleSetCharacter()
   }
 
@@ -78,7 +78,7 @@ export default class SelectCharacterPage extends Component {
             <Text>Load Character</Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.selectCharacterContainer}>
+        <View style={styles.characterPageContainer}>
           <View style={styles.titleContainer}>
             <Text style={styles.title}>Create Character</Text>
           </View>

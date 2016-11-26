@@ -18,7 +18,7 @@ import SelectCharacterPage from './components/SelectCharacterPage.js'
 import StatsPage from './components/StatsPage.js'
 import BoonsKnacksPage from './components/BoonsKnacksPage.js'
 import BirthrightsPage from './components/BirthrightsPage.js'
-import CombatPage from './components/CombatPage.js'
+import CombatPage from './components/Combat/CombatPage.js'
 import CharacterPage from './components/Character/CharacterPage.js'
 import TabBar from './components/TabBar.js'
 
@@ -77,7 +77,7 @@ class scion extends Component {
     this.state = {
       isLoading: true,
       isDbConnected: false,
-      activePage: 'character',
+      activePage: 'combat',
       dbRoot: null,
       database: null,
       character: null

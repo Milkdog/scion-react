@@ -7,7 +7,7 @@ import {
   Image,
   TouchableOpacity
 } from 'react-native'
-import { styles } from '../resources/Stylesheet.js'
+import { styles } from '../../resources/Stylesheet.js'
 
 export default class ArmorCard extends Component {
   static get defaultProps() {
@@ -49,7 +49,7 @@ export default class ArmorCard extends Component {
           <TouchableOpacity onPress={this.props.onEdit.bind(this)}>
             <View style={styles.controlItem}>
               <Image 
-                source={require('../resources/Data-Edit-16.png')}
+                source={require('../../resources/Data-Edit-16.png')}
                 style={styles.controlIcon}
               />
             </View>

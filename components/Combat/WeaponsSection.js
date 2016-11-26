@@ -10,10 +10,9 @@ import {
   Picker,
   TouchableOpacity
 } from 'react-native'
-import { styles } from '../resources/Stylesheet.js'
-import { attributes } from '../resources/Constants.js'
+import { styles } from '../../resources/Stylesheet.js'
 
-import Modal from './Modal.js'
+import Modal from '../Modal.js'
 import WeaponCard from './WeaponCard.js'
 
 export default class WeaponsSection extends Component {

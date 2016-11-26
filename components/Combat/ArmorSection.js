@@ -9,10 +9,9 @@ import {
   TextInput,
   TouchableOpacity
 } from 'react-native'
-import { styles } from '../resources/Stylesheet.js'
-import { attributes } from '../resources/Constants.js'
+import { styles } from '../../resources/Stylesheet.js'
 
-import Modal from './Modal.js'
+import Modal from '../Modal.js'
 import ArmorCard from './ArmorCard.js'
 
 export default class ArmorSection extends Component {

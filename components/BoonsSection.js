@@ -46,7 +46,11 @@ export default class BoonsSection extends Component {
     }, () => {
       // Load state from DB
       this.props.database.child(this.getStoragePath()).orderByChild('purview').on('value', (snapshotData) => {
-
+        // If it doesn't exist in the DB, skip it
+        if (snapshotData.val() === null) {
+          return null
+        }
+        
         const boons = snapshotData.val().map((boon, index) => {
           boon.index = index
           return boon

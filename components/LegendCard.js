@@ -26,7 +26,12 @@ export default class LegendCard extends Component {
   componentDidMount() {
       // Load state from DB
       this.props.database.child(this.getStoragePath()).on('value', (snapshotData) => {
-          this.setState(snapshotData.val())
+        // If it doesn't exist in the DB, skip it
+        if (snapshotData.val() === null) {
+          return null
+        }
+        
+        this.setState(snapshotData.val())
       })
       
   }
