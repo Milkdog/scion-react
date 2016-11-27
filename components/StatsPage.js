@@ -105,10 +105,12 @@ const abilities = [
     name: 'Command'
   },
   {
-    name: 'Control'
+    name: 'Control',
+    specialty: true
   },
   {
-    name: 'Craft'
+    name: 'Craft',
+    specialty: true
   },
   {
     name: 'Empathy'
@@ -144,7 +146,8 @@ const abilities = [
     name: 'Presence'
   },
   {
-    name: 'Science'
+    name: 'Science',
+    specialty: true
   },
   {
     name: 'Stealth'
@@ -162,9 +165,34 @@ export default class StatsPage extends Component {
     super(props)
 
     this.state = {
+      dbAbilities: [],
+      isAbilitiesLoaded: false,
       isShowEmptyAbilities: true,
       smallScreen: (Dimensions.get('window').width <= 700)
     }
+  }
+
+   componentDidMount() {
+    // Load state from DB
+    this.props.database.child('ability').on('value', (snapshotData) => {
+      let dbAbilities = []
+
+      if (snapshotData.val()) {
+        for (let [ name, ability ] of Object.entries(snapshotData.val())) {
+          ability.name = name
+          dbAbilities.push(ability)
+        }
+      }
+
+      this.setState({
+        dbAbilities,
+        isAbilitiesLoaded: true
+      })
+    })  
+  }
+
+  componentWillUnmount() {
+    this.props.database.child('ability').off('value')
   }
 
   handleToggleAbilities() {
@@ -196,16 +224,47 @@ export default class StatsPage extends Component {
   }
 
   renderAbilities() {
-    return abilities.map((ability, index) => {
+    if (!this.state.isAbilitiesLoaded) {
+      return null
+    }
+
+    // Merge the arrays, and make it unique
+    let renderAbilities = this.state.dbAbilities.concat(abilities)
+    let passedFilter = new Set()
+
+    renderAbilities = renderAbilities.filter((item) => {
+      if (passedFilter.has(item.name)) {
+        return false
+      }
+
+      passedFilter.add(item.name)
+      return true
+    })
+
+    // Alphabetize the abilities
+    renderAbilities = renderAbilities.sort((a, b) => {
+      if ( a.name < b.name )
+        return -1
+      if ( a.name > b.name )
+          return 1
+      return 0
+    })
+
+    return renderAbilities.map((ability, index) => {
       return (
         <AbilityCard 
           key={index} 
           database={this.props.database} 
           showEmpty={this.state.isShowEmptyAbilities} 
+          specialty={ability.specialty === true}
           title={ability.name}
         />
       )
     })
+  }
+
+  renderVirtues() {
+    return <Text>Virtues here...</Text>
   }
 
   render() {
@@ -231,6 +290,14 @@ export default class StatsPage extends Component {
               <View style={[styles.abilitiesContainer, this.state.smallScreen ? styles.smallScreen : {}]}>
                 {this.renderAbilities()}
               </View>
+            </View>
+          </View>
+          <View style={styles.container}>
+            <View style={styles.titleContainer}>
+              <Text style={styles.title}>Virtues</Text>
+            </View>
+            <View style={styles.additionalInfoContainer}>
+              {this.renderVirtues()}
             </View>
           </View>
           <View style={styles.container}>

@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, AsyncStorage } from 'react-native';
+import { View, Text, TextInput, StyleSheet, AsyncStorage } from 'react-native';
 import Box from './Box.js'
 
 export default class AbilitiesCard extends Component {
@@ -17,31 +17,45 @@ export default class AbilitiesCard extends Component {
 
       this.state = {
           rating: 0,
+          specialty: this.props.specialty,
+          isShowSpecialty: false,
+          specialtyName: '',
           isFavored: false
       }
   }
 
   componentDidMount() {
-      // Load state from DB
-      this.props.database.child(this.getStoragePath()).on('child_added', (snapshotData) => {
-          const value = {}
-          value[snapshotData.key] = snapshotData.val()
+      this.getFromDb()
+  }
 
-          this.setState(value)
+  getFromDb() {
+      // Load state from DB
+      this.props.database.child(this.getStoragePath()).child(this.props.title).on('value', (snapshotData) => {
+          if (snapshotData.val() !== null) {
+              this.setState(snapshotData.val())
+          }
       })
   }
 
   saveData(data) {
       this.setState(data, () => {
-          this.props.database.child(this.getStoragePath()).set(this.state)
+          this.props.database.child(this.getStoragePath()).child(this.props.title).set(this.state)
       })
   }
 
   getStoragePath() {
-      return 'ability/' + this.props.title
+      return 'ability'
   }
 
   onPressIncrement(isBoxActive, updateType) {
+      // On first click, get the specialty name
+      if (this.props.specialty && this.state[updateType] === 0) {
+          this.setState({
+              isShowSpecialty: true
+          })
+          return false
+      }
+
       const change = isBoxActive ? -1 : 1
       const update = {}
       update[updateType] = this.state[updateType] + change
@@ -51,6 +65,18 @@ export default class AbilitiesCard extends Component {
   handleToggleFavored() {
       this.saveData({
           isFavored: !this.state.isFavored
+      })
+  }
+
+  handleAddSpecialty(name) {
+      this.setState({
+          isShowSpecialty: false,
+      }, () => {
+          const dbPath = this.props.title + ' (' + name + ')'
+          this.props.database.child(this.getStoragePath()).child(dbPath).set({
+              isFavored: this.state.isFavored,
+              rating: 1
+          })
       })
   }
 
@@ -73,6 +99,22 @@ export default class AbilitiesCard extends Component {
     )
   }
   
+  renderAbilityContent() {
+    if (this.state.isShowSpecialty) {
+        return (
+            <TextInput
+                placeholder='Specialty Type'
+                onSubmitEditing={(event) => {this.handleAddSpecialty(event.nativeEvent.text)}}
+            />
+        )
+    }
+
+    return (
+        <View style={styles.ratingContainer}>
+            {this.renderRatingBoxes()}
+        </View>
+    )
+  }
 
   render() {
     if (!this.props.showEmpty && this.state.rating == 0)
@@ -87,9 +129,7 @@ export default class AbilitiesCard extends Component {
             <Text style={styles.title}>{this.props.title}</Text>
         </View>
         <View style={{flex: .5}}>
-            <View style={styles.ratingContainer}>
-                {this.renderRatingBoxes()}
-            </View>
+            {this.renderAbilityContent()}
         </View>
       </View>
     )
@@ -98,8 +138,7 @@ export default class AbilitiesCard extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        marginHorizontal: 8,
-        height: 24,
+        margin: 4,
         flexDirection: 'row',
         justifyContent: 'center',
         width: 280

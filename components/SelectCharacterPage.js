@@ -33,14 +33,16 @@ export default class SelectCharacterPage extends Component {
     }, () => {
       // Load state from DB
       this.props.database.orderByKey().on('value', (snapshotData) => {
-        let characters = []
-        for (let character of Object.keys(snapshotData.val())) {
-          characters.push(character)
-        }
+        if (snapshotData.val() !== null) {
+          let characters = []
+          for (let character of Object.keys(snapshotData.val())) {
+            characters.push(character)
+          }
 
-        this.setState({
-          characters
-        })
+          this.setState({
+            characters
+          })
+        }
       })
     })
   }

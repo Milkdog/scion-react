@@ -61,11 +61,11 @@ const tabs = [
     id: 'character',
     name: 'Character'
   },
-  {
-    id: 'roll-dice',
-    name: 'Roll Dice',
-    isPage: false
-  }
+  // {
+  //   id: 'roll-dice',
+  //   name: 'Roll Dice',
+  //   isPage: false
+  // }
 ]
 
 const storageCharacterKey = '@scion:character'
@@ -77,7 +77,7 @@ class scion extends Component {
     this.state = {
       isLoading: true,
       isDbConnected: false,
-      activePage: 'combat',
+      activePage: 'stats',
       dbRoot: null,
       database: null,
       character: null
