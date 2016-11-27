@@ -155,11 +155,11 @@ export const styles = StyleSheet.create({
     marginBottom: 2
   },
   statItem: {
-    width: 150,
+    width: 180,
     flexDirection: 'row'
   },
   statName: {
-    width: 100,
+    width: 120,
     fontWeight: 'bold'
   },
   statValue: {

@@ -82,6 +82,16 @@ export default class CombatStatsSection extends Component {
     }
   }
 
+  calculateAccuracy(type) {
+    const activeWeapon = this.getActiveWeapon()
+
+    return (
+      this.getRating(this.state.stats.attribute.Dexterity)
+        + this.getRating(this.state.stats.ability[type])
+        + Number(activeWeapon.accuracyModifier ? activeWeapon.accuracyModifier : 0)
+    ) 
+  }
+
   calculateDodgeDv() {    
     const {attribute, ability, legend } = this.state.stats
 
@@ -189,8 +199,49 @@ export default class CombatStatsSection extends Component {
     return abilities
   }
 
+  renderMisc() {
+    return [
+      (
+        <View key='legend' style={styles.statItem}>
+          <Text style={styles.statName}>Legend</Text>
+          <Text style={styles.statValue}>{this.getRating(this.state.stats.legend)}</Text>
+        </View>
+      ),
+      (
+        <View key='willpower' style={styles.statItem}>
+          <Text style={styles.statName}>Willpower</Text>
+          <Text style={styles.statValue}>{this.getRating(this.state.stats.willpower)}</Text>
+        </View>
+      )
+    ]
+  }
+
   renderCombatStats() {
     return [
+       (
+        <View key='accMelee' style={styles.statItem}>
+          <Text style={styles.statName}>Accuracy (Melee)</Text>
+          <Text style={styles.statValue}>{this.calculateAccuracy('Melee')}</Text>
+        </View>
+      ),
+      (
+        <View key='accBrawl' style={styles.statItem}>
+          <Text style={styles.statName}>Accuracy (Brawl)</Text>
+          <Text style={styles.statValue}>{this.calculateAccuracy('Brawl')}</Text>
+        </View>
+      ),
+      (
+        <View key='accMarksmanship' style={styles.statItem}>
+          <Text style={styles.statName}>Accuracy (Marksmanship)</Text>
+          <Text style={styles.statValue}>{this.calculateAccuracy('Marksmanship')}</Text>
+        </View>
+      ),
+      (
+        <View key='accThrown' style={styles.statItem}>
+          <Text style={styles.statName}>Accuracy (Thrown)</Text>
+          <Text style={styles.statValue}>{this.calculateAccuracy('Thrown')}</Text>
+        </View>
+      ),
       (
         <View key='dodgeDv' style={styles.statItem}>
           <Text style={styles.statName}>Dodge DV</Text>
@@ -213,9 +264,6 @@ export default class CombatStatsSection extends Component {
   }
 
   renderSoak() {
-    
-    // Lethal Soak = ceil(stamina + epic/2) + Armor
-    // Aggr soak = armor + epic
     return [
       (
         <View key='bashing' style={styles.statItem}>
@@ -264,11 +312,10 @@ export default class CombatStatsSection extends Component {
           </View>
 
           <View style={styles.statsGroupTitle}>
-            <Text>Legend</Text>
+            <Text>Misc</Text>
           </View>
-          <View style={styles.statItem}>
-            <Text style={styles.statName}>Rating</Text>
-            <Text style={styles.statValue}>{this.getRating(this.state.stats.legend)}</Text>
+          <View style={styles.statsGroup}>
+            {this.renderMisc()}
           </View>
 
           <View style={styles.statsGroupTitle}>
