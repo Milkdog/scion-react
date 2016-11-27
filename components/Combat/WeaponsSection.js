@@ -231,7 +231,7 @@ export default class WeaponsSection extends Component {
 
   render() {
     return (
-      <View style={styles.splitContainer}>
+      <View>
         {this.renderModal()}
         <View style={styles.titleContainer}>
           <Text style={styles.title}>Weapons</Text>

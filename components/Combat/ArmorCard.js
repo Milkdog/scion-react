@@ -55,9 +55,11 @@ export default class ArmorCard extends Component {
             </View>
           </TouchableOpacity>
         </View>
-        <Text style={styles.cardTitle}>
-            {this.props.name}
-        </Text>
+        <TouchableOpacity onPress={this.props.doActivate.bind(this)}>
+          <Text style={[styles.cardTitle, this.props.isActive ? styles.goodText : styles.normalText]}>
+              {this.props.name}
+          </Text>
+        </TouchableOpacity>
         <View>
             <Text>Bash Soak: {this.props.bashSoak}</Text>
         </View>

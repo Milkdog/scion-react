@@ -27,7 +27,8 @@ export default class ArmorSection extends Component {
       newBashSoak: '',
       newLethalSoak: '',
       newMobilityPenalty: '',
-      newDescription: ''
+      newDescription: '',
+      newIsActive: false
     }
   }
   
@@ -74,7 +75,8 @@ export default class ArmorSection extends Component {
       bashSoak: this.state.newBashSoak,
       lethalSoak: this.state.newLethalSoak,
       mobilityPenalty: this.state.newMobilityPenalty,
-      description: this.state.newDescription
+      description: this.state.newDescription,
+      isActive: this.state.newIsActive
     }
   }
 
@@ -104,13 +106,26 @@ export default class ArmorSection extends Component {
       newBashSoak: item.bashSoak,
       newLethalSoak: item.lethalSoak,
       newMobilityPenalty: item.mobilityPenalty,
-      newDescription: item.description
+      newDescription: item.description,
+      newIsActive: item.isActive
     })
   }
 
   handleDelete(index) {
     this.props.database.child(this.getStoragePath()).child(index).remove()
     this.getItemsFromDb()
+  }
+
+  handleActivate(index) {
+    // Deactivate the other items
+    for (let [ itemIndex, item ] of Object.entries(this.state.items)) {
+      if (item.isActive) {
+        this.props.database.child(this.getStoragePath()).child(itemIndex).child('isActive').set(false)
+      }
+    }
+    
+    // Activate this item
+    this.props.database.child(this.getStoragePath()).child(index).child('isActive').set(true)
   }
 
   getStoragePath() {
@@ -147,8 +162,6 @@ export default class ArmorSection extends Component {
           </View>
         </View>
 
-        
-
         <View style={styles.inputRow}>
           <View style={styles.label}>
             <Text>Mobility Penalty</Text>
@@ -182,6 +195,7 @@ export default class ArmorSection extends Component {
       return (
         <ArmorCard 
           key={index} 
+          doActivate={this.handleActivate.bind(this, item.index)}
           onDelete={() => {this.handleDelete(item.index)}} 
           onEdit={this.handleEdit.bind(this, item)} 
           {...item} 
@@ -192,7 +206,7 @@ export default class ArmorSection extends Component {
 
   render() {
     return (
-      <View style={styles.splitContainer}>
+      <View>
         {this.renderModal()}
         <View style={styles.titleContainer}>
           <Text style={styles.title}>Armor</Text>
