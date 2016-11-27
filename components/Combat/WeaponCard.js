@@ -66,7 +66,7 @@ export default class WeaponCard extends Component {
             <Text>Accuracy Modifier: +{this.props.accuracyModifier}</Text>
         </View>
         <View>
-            <Text>Damage Modifier: +{this.props.damageModifier}</Text>
+            <Text>Damage: +{this.props.damageModifier} {this.props.damageType.charAt(0)}</Text>
         </View>
         <View>
             <Text>Speed: {this.props.speed}</Text>

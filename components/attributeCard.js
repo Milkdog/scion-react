@@ -31,6 +31,10 @@ export default class AttributeCard extends Component {
       
   }
 
+  componentWillUnmount() {
+      this.props.database.child(this.getStoragePath()).off('child_added')
+  }
+
   saveData(data) {
       this.setState(data, () => {
           this.props.database.child(this.getStoragePath()).set(this.state)

@@ -28,6 +28,10 @@ export default class AbilitiesCard extends Component {
       this.getFromDb()
   }
 
+  componentWillUnmount() {
+      this.props.database.child(this.getStoragePath()).off('value')
+  }
+
   getFromDb() {
       // Load state from DB
       this.props.database.child(this.getStoragePath()).child(this.props.title).on('value', (snapshotData) => {

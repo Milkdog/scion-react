@@ -30,7 +30,10 @@ export default class WillpowerCard extends Component {
 
           this.setState(value)
       })
-      
+  }
+
+  componentWillUnmount() {
+      this.props.database.child(this.getStoragePath()).off('child_added')
   }
 
   saveData(data) {

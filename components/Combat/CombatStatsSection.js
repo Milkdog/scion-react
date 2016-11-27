@@ -59,22 +59,28 @@ export default class CombatStatsSection extends Component {
   }
 
   getActiveWeapon() {
-    for (let [ itemIndex, item ] of Object.entries(this.state.stats.weapons)) {
-      if (item.isActive) {
-        return item
+    if (this.state.stats.weapons && this.state.stats.weapons.length > 0) {
+      for (let [ itemIndex, item ] of Object.entries(this.state.stats.weapons)) {
+        if (item.isActive) {
+          return item
+        }
       }
     }
 
     // Return default
     return {
+      damageModifier: 0,
+      damageType: '',
       defenseValue: 0
     }
   }
 
   getActiveArmor() {
-    for (let [ itemIndex, item ] of Object.entries(this.state.stats.armor)) {
-      if (item.isActive) {
-        return item
+    if (this.state.stats.armor && this.state.stats.armor.length > 0) {
+      for (let [ itemIndex, item ] of Object.entries(this.state.stats.armor)) {
+        if (item.isActive) {
+          return item
+        }
       }
     }
 
@@ -93,6 +99,15 @@ export default class CombatStatsSection extends Component {
       this.getRating(this.state.stats.attribute.Dexterity)
         + this.getRating(this.state.stats.ability[type])
         + Number(activeWeapon.accuracyModifier ? activeWeapon.accuracyModifier : 0)
+    ) 
+  }
+
+  calculateDamage() {
+    const activeWeapon = this.getActiveWeapon()
+
+    return (
+        Number(activeWeapon.damageModifier ? activeWeapon.damageModifier : 0) 
+        + ' ' + activeWeapon.damageType.charAt(0)
     ) 
   }
 
@@ -244,6 +259,12 @@ export default class CombatStatsSection extends Component {
         <View key='accThrown' style={styles.statItem}>
           <Text style={styles.statName}>Accuracy (Thrown)</Text>
           <Text style={styles.statValue}>{this.calculateAccuracy('Thrown')}</Text>
+        </View>
+      ),
+      (
+        <View key='damage' style={styles.statItem}>
+          <Text style={styles.statName}>Damage</Text>
+          <Text style={styles.statValue}>{this.calculateDamage()}</Text>
         </View>
       ),
       (

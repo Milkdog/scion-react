@@ -26,6 +26,7 @@ export default class WeaponsSection extends Component {
       editIndex: '',
       newName: '',
       newDamageModifier: '0',
+      newDamageType: 'Bashing',
       newAccuracyModifier: '0',
       newSpeed: '0', 
       newRange: '0',
@@ -37,6 +38,10 @@ export default class WeaponsSection extends Component {
   
   componentDidMount() {
     this.getItemsFromDb()
+  }
+
+  componentWillUnmount() {
+    this.props.database.child(this.getStoragePath()).off('value')
   }
 
   getItemsFromDb() {
@@ -76,6 +81,7 @@ export default class WeaponsSection extends Component {
     return {
       name: this.state.newName,
       damageModifier: this.state.newDamageModifier,
+      damageType: this.state.newDamageType,
       accuracyModifier: this.state.newAccuracyModifier,
       speed: this.state.newSpeed, 
       range: this.state.newRange,
@@ -109,6 +115,7 @@ export default class WeaponsSection extends Component {
       editIndex: item.index,
       newName: item.name,
       newDamageModifier: item.damageModifier,
+      newDamageType: item.damageType,
       newAccuracyModifier: item.accuracyModifier,
       newSpeed: item.speed, 
       newRange: item.range,
@@ -166,6 +173,21 @@ export default class WeaponsSection extends Component {
           </View>
           <View style={styles.input}>
             <TextInput defaultValue={this.state.newDamageModifier} keyboardType='numeric' selectTextOnFocus={true} onChangeText={(text) => this.setState({newDamageModifier: text})} />
+          </View>
+        </View>
+
+        <View style={styles.inputRow}>
+          <View style={styles.label}>
+            <Text>Damage Type</Text>
+          </View>
+          <View style={styles.input}>
+            <Picker
+              selectedValue={this.state.newDamageType}
+              onValueChange={(value) => this.setState({newDamageType: value})}>
+              <Picker.Item label="Bashing" value="Bashing" />
+              <Picker.Item label="Lethal" value="Lethal" />
+              <Picker.Item label="Aggravated" value="Aggravated" />
+            </Picker>
           </View>
         </View>
 

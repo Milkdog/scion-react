@@ -62,7 +62,7 @@ export default class LegendCard extends Component {
   renderRatingBoxes() {
     const ratingBoxes = []
     
-    for (let i=0; i < 10; i++) {
+    for (let i=0; i < 12; i++) {
         const isActive = (i < this.state.rating)
         ratingBoxes.push(
             <Box key={i} isActive={isActive} isRounded={true} onPress={() => { this.onPressIncrement(isActive, 'rating')}} />
@@ -75,7 +75,7 @@ export default class LegendCard extends Component {
   renderTempRatingBoxes() {
     const ratingBoxes = []
     
-    for (let i=0; i < 10; i++) {
+    for (let i=0; i < 12; i++) {
         const isActive = (i < this.state.tempRating)
         ratingBoxes.push(
             <Box key={i} isActive={isActive} onPress={() => { this.onPressIncrement(isActive, 'tempRating')}} />
