@@ -43,7 +43,7 @@ export default class CombatStatsSection extends Component {
   }
 
   getRating(stat) {
-    return (stat ? stat.rating : 0)
+    return Number(stat ? stat.rating : 0)
   }
 
   getEpicModifier(epicRating) {
@@ -51,7 +51,7 @@ export default class CombatStatsSection extends Component {
           return 0
       }
 
-      return ((0.5 * Math.pow(epicRating, 2)) - (0.5 * epicRating) + 1)
+      return Number((0.5 * Math.pow(epicRating, 2)) - (0.5 * epicRating) + 1)
   }
 
   getActiveWeapon() {
@@ -64,6 +64,21 @@ export default class CombatStatsSection extends Component {
     // Return default
     return {
       defenseValue: 0
+    }
+  }
+
+  getActiveArmor() {
+    for (let [ itemIndex, item ] of Object.entries(this.state.stats.armor)) {
+      if (item.isActive) {
+        return item
+      }
+    }
+
+    // Return default
+    return {
+      bashSoak: 0,
+      lethalSoak: 0,
+      mabilityPenalty: 0
     }
   }
 
@@ -104,6 +119,40 @@ export default class CombatStatsSection extends Component {
     return dice + 'd + ' + autoSuccesses
   }
 
+  calculateStaminaSoak() {
+    return (
+      this.getRating(this.state.stats.attribute.Stamina)
+        + this.getEpicModifier(this.state.stats.attribute.Stamina.epic)
+    )
+  }
+
+  calculateBashSoak() {
+    const activeArmor = this.getActiveArmor()
+
+    return (
+      this.calculateStaminaSoak()
+        + Number(activeArmor.bashSoak)
+    )
+  }
+
+  calculateLethalSoak() {
+    const activeArmor = this.getActiveArmor()
+
+    return (
+      Math.ceil(this.calculateStaminaSoak()/2)
+        + Number(activeArmor.lethalSoak)
+    )
+  }
+
+  calculateAggravatedSoak() {
+    const activeArmor = this.getActiveArmor()
+
+    return (
+      Number(this.state.stats.attribute.Stamina ? this.state.stats.attribute.Stamina.epic : 0)
+        + Number(activeArmor.lethalSoak)
+    )
+  }
+
   renderAttributes() {
     let attributes = []
 
@@ -141,9 +190,6 @@ export default class CombatStatsSection extends Component {
   }
 
   renderCombatStats() {
-    // Bashing soak = Stamina + Armor + Epic Stamina Bonus
-    // Lethal Soak = ceil(stamina + epic/2) + Armor
-    // Aggr soak = armor + epic
     return [
       (
         <View key='dodgeDv' style={styles.statItem}>
@@ -167,26 +213,26 @@ export default class CombatStatsSection extends Component {
   }
 
   renderSoak() {
-    // Bashing soak = Stamina + Armor + Epic Stamina Bonus
+    
     // Lethal Soak = ceil(stamina + epic/2) + Armor
     // Aggr soak = armor + epic
     return [
       (
-        <View key='dodgeDv' style={styles.statItem}>
-          <Text style={styles.statName}>Dodge DV</Text>
-          <Text style={styles.statValue}>{this.calculateDodgeDv()}</Text>
+        <View key='bashing' style={styles.statItem}>
+          <Text style={styles.statName}>Bashing</Text>
+          <Text style={styles.statValue}>{this.calculateBashSoak()}</Text>
         </View>
       ),
       (
-        <View key='parryDv' style={styles.statItem}>
-          <Text style={styles.statName}>Parry DV</Text>
-          <Text style={styles.statValue}>{this.calculateParryDv()}</Text>
+        <View key='lethal' style={styles.statItem}>
+          <Text style={styles.statName}>Lethal</Text>
+          <Text style={styles.statValue}>{this.calculateLethalSoak()}</Text>
         </View>
       ),
       (
-        <View key='joinBattle' style={styles.statItem}>
-          <Text style={styles.statName}>Join Battle</Text>
-          <Text style={styles.statValue}>{this.calculateJoinBattle()}</Text>
+        <View key='aggravated' style={styles.statItem}>
+          <Text style={styles.statName}>Aggravated</Text>
+          <Text style={styles.statValue}>{this.calculateAggravatedSoak()}</Text>
         </View>
       )
     ]
@@ -237,6 +283,13 @@ export default class CombatStatsSection extends Component {
           </View>
           <View style={styles.statsGroup}>
             {this.renderSoak()}
+          </View>
+          
+          <View style={styles.statsGroupTitle}>
+            <Text>Health</Text>
+          </View>
+          <View style={styles.statsGroup}>
+            <Text>Health here</Text>
           </View>
         </View>
       </View>
