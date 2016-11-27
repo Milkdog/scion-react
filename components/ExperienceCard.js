@@ -31,15 +31,19 @@ export default class ExperienceCard extends Component {
     this.props.database.child(this.getStoragePath()).on('value', (snapshotData) => {
       if (snapshotData.val()) {
         this.setState(snapshotData.val())
-        this.setState({
-          isLoaded: true
-        })
       }
+      this.setState({
+        isLoaded: true
+      })
     })  
   }
 
+  componentWillUnmount() {
+    this.props.database.child(this.getStoragePath()).off('value')
+  }
+
   saveData(data) {
-    if(this.state.isLoaded) {
+    if (this.state.isLoaded && (data.total > 0 || data.spent > 0)) {
       this.setState(data, () => {
         this.props.database.child(this.getStoragePath()).set(this.state)
       })
@@ -47,7 +51,7 @@ export default class ExperienceCard extends Component {
   }
 
   getStoragePath() {
-   return 'experience'
+    return 'experience'
   }
 
   render() {

@@ -45,6 +45,10 @@ export default class SelectCharacterPage extends Component {
     })
   }
 
+  componentWillUnmount() {
+    this.props.database.off('value')
+  }
+
   handleSetCharacter() {
     this.props.doSetCharacter(this.state.selectedCharacter)
   }

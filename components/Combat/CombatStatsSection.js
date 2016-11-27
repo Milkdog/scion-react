@@ -27,6 +27,10 @@ export default class CombatStatsSection extends Component {
     this.getStatsFromDb()
   }
 
+  componentWillUnmount() {
+    this.props.database.off('value')
+  }
+
   getStatsFromDb() {
     // Load state from DB
     this.props.database.on('value', (snapshotData) => {
