@@ -25,12 +25,13 @@ export default class WeaponsSection extends Component {
       isEdit: false,
       editIndex: '',
       newName: '',
-      newDamageModifier: '',
-      newAccuracyModifier: '',
-      newSpeed: '', 
-      newRange: '',
-      newDefenseValue: '',
-      newDescription: ''
+      newDamageModifier: '0',
+      newAccuracyModifier: '0',
+      newSpeed: '0', 
+      newRange: '0',
+      newDefenseValue: '0',
+      newDescription: '',
+      newIsActive: false
     }
   }
   
@@ -79,7 +80,8 @@ export default class WeaponsSection extends Component {
       speed: this.state.newSpeed, 
       range: this.state.newRange,
       defenseValue: this.state.newDefenseValue,
-      description: this.state.newDescription
+      description: this.state.newDescription,
+      isActive: this.state.newIsActive
     }
   }
 
@@ -111,13 +113,26 @@ export default class WeaponsSection extends Component {
       newSpeed: item.speed, 
       newRange: item.range,
       newDefenseValue: item.defenseValue,
-      newDescription: item.description
+      newDescription: item.description,
+      newIsActive: item.isActive
     })
   }
 
   handleDelete(index) {
     this.props.database.child(this.getStoragePath()).child(index).remove()
     this.getItemsFromDb()
+  }
+
+  handleActivate(index) {
+    // Deactivate the other items
+    for (let [ itemIndex, item ] of Object.entries(this.state.items)) {
+      if (item.isActive) {
+        this.props.database.child(this.getStoragePath()).child(itemIndex).child('isActive').set(false)
+      }
+    }
+    
+    // Activate this item
+    this.props.database.child(this.getStoragePath()).child(index).child('isActive').set(true)
   }
 
   getStoragePath() {
@@ -205,6 +220,7 @@ export default class WeaponsSection extends Component {
       return (
         <WeaponCard 
           key={index} 
+          doActivate={this.handleActivate.bind(this, item.index)}
           onDelete={() => {this.handleDelete(item.index)}} 
           onEdit={this.handleEdit.bind(this, item)} 
           {...item} 

@@ -117,7 +117,8 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     position: 'absolute',
     top: 4,
-    right: 4
+    right: 4,
+    zIndex: 10
   },
   onlineStatusContainer: {
     position: 'absolute',
@@ -138,6 +139,31 @@ export const styles = StyleSheet.create({
   controlText: {
     fontSize: 12,
     textAlign: 'center'
+  },
+  statsSummaryContainer: {
+    flexDirection: 'column'
+  },
+  statsGroup: {
+    flexDirection: 'row',
+    flexWrap: 'wrap'
+  },
+  statsGroupTitle: {
+    flex: 1,
+    borderBottomWidth: 1,
+    marginTop: 12,
+    paddingBottom: 2,
+    marginBottom: 2
+  },
+  statItem: {
+    width: 150,
+    flexDirection: 'row'
+  },
+  statName: {
+    width: 100,
+    fontWeight: 'bold'
+  },
+  statValue: {
+    marginLeft: 8
   },
   smallScreen: {
     height: null
@@ -207,6 +233,9 @@ export const styles = StyleSheet.create({
     backgroundColor: 'aliceblue',
     borderWidth: 2,
     borderRadius: 10,
+  },
+  normalText: {
+    color: 'black'
   },
   goodText: {
     color: 'green'
