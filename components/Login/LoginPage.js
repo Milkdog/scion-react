@@ -23,17 +23,17 @@ export default class SelectCharacterPage extends Component {
   }
 
   handleCreateAccount() {
-    
+
   }
 
-  async handleLogin() {
-    this.props.doSetLogin(this.state.userEmail, this.state.userPassword)
-    this.props.doLogin()
+  handleLogin() {
+    this.props.doLogin(this.state.userEmail, this.state.userPassword)
   }
 
   render() {
     return (
       <View>
+        <Text>{JSON.stringify(this.state)}</Text>
         <View style={styles.characterPageContainer}>
           <View style={styles.titleContainer}>
             <Text style={styles.title}>Login</Text>
