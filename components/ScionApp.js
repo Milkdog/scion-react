@@ -21,6 +21,7 @@ import BirthrightsPage from './BirthrightsPage.js'
 import CombatPage from './Combat/CombatPage.js'
 import CharacterPage from './Character/CharacterPage.js'
 import TabBar from './TabBar.js'
+import LoginPage from './Login/LoginPage.js'
 
 const firebaseConfig = {
   apiKey: "AIzaSyC4SXAxLdw91GuxcYP_ys9JTKcTtTyyLxE",
@@ -69,6 +70,8 @@ const tabs = [
 ]
 
 const storageCharacterKey = '@scion:character'
+const storageUserEmailKey = '@scion:userEmal'
+const storageUserPasswordKey = '@scion:userPassword'
 
 class ScionApp extends Component {
   constructor(props) {
@@ -80,25 +83,46 @@ class ScionApp extends Component {
       activePage: 'stats',
       dbRoot: null,
       database: null,
-      character: null
+      character: null,
+      userEmail: null,
+      userPassword: null
     }
   }
 
   async componentDidMount() {
-// this.setState({
-//   isLoading: false
-// })
-
-// return null
-
     await AsyncStorage.getItem(storageCharacterKey, (error, value) => {
       this.setState({
         character: value
       })
     })
 
-    // Log user in
-    firebase.auth().signInWithEmailAndPassword('chris@chrismielke.com', 'test123').catch(function(error) {
+    await AsyncStorage.getItem(storageUserEmailKey, (error, value) => {
+      this.setState({
+        userEmail: value
+      })
+    })
+    
+    await AsyncStorage.getItem(storageUserPasswordKey, (error, value) => {
+      this.setState({
+        userPassword: value
+      })
+    })
+
+    if (this.state.userEmail && this.state.userPassword) {
+      this.handleLogin()
+    } else {
+      this.setState({
+        isLoading: false
+      })
+    }
+  }
+
+  componentWillUnmount() {
+    firebase.auth().signOut()
+  }
+
+  handleLogin() {
+    firebase.auth().signInWithEmailAndPassword(this.state.userEmail, this.state.userPassword).catch(function(error) {
       console.log('Auth error', error)
     }).then((user) => {
       console.log('Logged in', user.uid)
@@ -125,8 +149,14 @@ class ScionApp extends Component {
     })
   }
 
-  componentWillUnmount() {
-    firebase.auth().signOut()
+  handleSetLogin(userEmail, userPassword) {
+    AsyncStorage.setItem(storageUserEmailKey, userEmail)
+    AsyncStorage.setItem(storageUserPasswordKey, userPassword)
+
+    this.setState({
+      userEmail,
+      userPassword
+    })
   }
 
   handlePageUpdate(newPage) {
@@ -205,6 +235,15 @@ class ScionApp extends Component {
         <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
           <ProgressRingWindows style={{height: 150, width: 150}} />
         </View>
+      )
+    }
+
+    if (!this.state.userEmail && !this.state.userPassword && !this.state.isDbConnected) {
+      return (
+        <LoginPage
+          doSetLogin={ this.handleSetLogin.bind(this) }
+          doLogin={ this.handleLogin.bind(this) }
+        />
       )
     }
     
