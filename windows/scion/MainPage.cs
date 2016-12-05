@@ -2,11 +2,14 @@ using ReactNative;
 using ReactNative.Modules.Core;
 using ReactNative.Shell;
 using System.Collections.Generic;
+using CodePush.ReactNative;
 
 namespace scion
 {
     class MainPage : ReactPage
     {
+        private CodePushReactPackage codePushReactPackage;
+
         public override string MainComponentName
         {
             get
@@ -20,7 +23,9 @@ namespace scion
         {
             get
             {
-                return "ms-appx:///ReactAssets/index.windows.bundle";
+                //return "ms-appx:///ReactAssets/index.windows.bundle";
+                codePushReactPackage = new CodePushReactPackage("izsJRiv_NDAWG-ut7LHICgT3lCjWVJ3gLPobG", this);
+                return codePushReactPackage.GetJavaScriptBundleFile();
             }
         }
 #endif
@@ -32,6 +37,7 @@ namespace scion
                 return new List<IReactPackage>
                 {
                     new MainReactPackage(),
+                    codePushReactPackage
                 };
             }
         }
