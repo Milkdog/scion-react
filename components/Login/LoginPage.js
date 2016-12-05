@@ -40,10 +40,12 @@ export default class SelectCharacterPage extends Component {
           </View>
           <TextInput
             placeholder='Email'
+            defaultValue={this.state.userEmail}
             onChangeText={(text) => this.setState({userEmail: text})}
           />
            <TextInput
             placeholder='Password'
+            defaultValue={this.state.userPassword}
             secureTextEntry={true}
             onChangeText={(text) => this.setState({userPassword: text})}
           />

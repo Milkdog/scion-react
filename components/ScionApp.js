@@ -70,6 +70,8 @@ const tabs = [
 ]
 
 const storageCharacterKey = '@scion:character'
+const storageUserEmailKey = '@scion:userEmail'
+const storageUserPasswordKey = '@scion:userPassword'
 
 class ScionApp extends Component {
   constructor(props) {
@@ -93,13 +95,6 @@ class ScionApp extends Component {
       })
     })
 
-    // Check DB connection status
-    firebase.database().ref(".info/connected").on("value", (snap) => {
-      this.setState({
-        isDbConnected: (snap.val() === true)
-      }) 
-    })
-
     firebase.auth().onAuthStateChanged((user) => {
       if (user === null) {
         return false
@@ -117,9 +112,29 @@ class ScionApp extends Component {
       this.setState({
         dbRoot,
         database,
-        isLoading: false
+        isLoading: false,
+        isLoggedIn: true
       })
     })
+
+    await AsyncStorage.multiGet([storageUserEmailKey, storageUserPasswordKey], (error, value) => {
+      const userEmail = value[0][1]
+      const userPassword = value[1][1]
+      if (userEmail && userPassword) {
+        firebase.auth().signInWithEmailAndPassword(userEmail, userPassword).catch(function(error) {
+          console.log('Auto-login error', error)
+        })
+      }
+    })
+
+    // Check DB connection status
+    firebase.database().ref(".info/connected").on("value", (snap) => {
+      this.setState({
+        isDbConnected: (snap.val() === true)
+      }) 
+    })
+
+    
   }
 
   componentWillUnmount() {
@@ -136,8 +151,11 @@ class ScionApp extends Component {
     firebase.auth().signInWithEmailAndPassword(userEmail, userPassword).catch(function(error) {
       console.log('Auth error', error)
     }).then((user) => {
-      console.log('Logged in', user.uid)
+      console.log('Manual logged in', user.uid)
 
+      AsyncStorage.setItem(storageUserEmailKey, userEmail)
+      AsyncStorage.setItem(storageUserPasswordKey, userPassword)
+      
       this.setState({
         isLoggedIn: true
       })
