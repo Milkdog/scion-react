@@ -33,7 +33,10 @@ export default class LegendCard extends Component {
         
         this.setState(snapshotData.val())
       })
-      
+  }
+
+  componentWillUnmount() {
+      this.props.database.child(this.getStoragePath()).off('value')
   }
 
   saveData(data) {

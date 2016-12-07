@@ -212,6 +212,18 @@ export const styles = StyleSheet.create({
   errorInput: {
     borderColor: 'red'
   },
+  diceModalContainer: {
+    position: 'absolute',
+    bottom: 50,
+    left: 20,
+    width: 200,
+    zIndex: 200,
+    backgroundColor: 'white',
+    borderColor: "darkgrey",
+    borderWidth: 4,
+    borderRadius: 8,
+    padding: 8
+  },
   modalContainer: {
     position: 'absolute',
     top: 0,
@@ -237,7 +249,7 @@ export const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: 'aliceblue',
     borderWidth: 2,
-    borderRadius: 10,
+    borderRadius: 8,
   },
   normalText: {
     color: 'black'

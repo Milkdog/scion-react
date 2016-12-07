@@ -22,6 +22,7 @@ import CombatPage from './Combat/CombatPage.js'
 import CharacterPage from './Character/CharacterPage.js'
 import TabBar from './TabBar.js'
 import LoginPage from './Login/LoginPage.js'
+import DiceModal from './DiceRoll/DiceModal.js'
 
 const firebaseConfig = {
   apiKey: "AIzaSyC4SXAxLdw91GuxcYP_ys9JTKcTtTyyLxE",
@@ -62,11 +63,12 @@ const tabs = [
     id: 'character',
     name: 'Character'
   },
-  // {
-  //   id: 'roll-dice',
-  //   name: 'Roll Dice',
-  //   isPage: false
-  // }
+  {
+    id: 'roll-dice',
+    name: 'Roll Dice',
+    isPage: false,
+    onPress: 'handleToggleDice'
+  }
 ]
 
 const storageCharacterKey = '@scion:character'
@@ -81,6 +83,7 @@ class ScionApp extends Component {
       isLoading: true,
       isDbConnected: false,
       isLoggedIn: false,
+      isDiceVisible: false,
       activePage: 'stats',
       dbRoot: null,
       database: null,
@@ -200,6 +203,12 @@ class ScionApp extends Component {
     })
   }
 
+  handleToggleDice() {
+    this.setState({
+      isDiceVisible: !this.state.isDiceVisible
+    })
+  }
+
   getPage() {
     if (this.state.character === null) {
       return (
@@ -253,7 +262,17 @@ class ScionApp extends Component {
     const displayTabs = tabs.map((tab, index) => {
       const tabStyle = tab.id == this.state.activePage ? styles.activeTab : {}
       return (
-        <Text key={index} style={[styles.tabButton, tabStyle]} onPress={() => {this.handlePageUpdate(tab.id)}}>{tab.name}</Text>
+        <TouchableOpacity key={index} onPress={() => {
+          if (tab.onPress) {
+            this[tab.onPress]()
+          } else {
+            this.handlePageUpdate(tab.id)
+          }
+        }}>
+          <Text style={[styles.tabButton, tabStyle]}>
+            {tab.name}
+          </Text>
+        </TouchableOpacity>
       )
     })
 
@@ -302,6 +321,11 @@ class ScionApp extends Component {
           {this.getPage()}
         </ScrollView>
         {this.getErrorMessage()}
+        <DiceModal
+          isVisible={this.state.isDiceVisible}
+          dice={10}
+          autoSuccess={3}
+        />
         <TabBar>
           {this.getTabs()}
         </TabBar>
