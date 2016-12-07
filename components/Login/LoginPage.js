@@ -23,7 +23,7 @@ export default class SelectCharacterPage extends Component {
   }
 
   handleCreateAccount() {
-
+    this.props.doCreateAccount(this.state.userEmail, this.state.userPassword)
   }
 
   handleLogin() {
@@ -33,13 +33,13 @@ export default class SelectCharacterPage extends Component {
   render() {
     return (
       <View>
-        <Text>{JSON.stringify(this.state)}</Text>
         <View style={styles.characterPageContainer}>
           <View style={styles.titleContainer}>
             <Text style={styles.title}>Login</Text>
           </View>
           <TextInput
             placeholder='Email'
+            keyboardType="email-address"
             defaultValue={this.state.userEmail}
             onChangeText={(text) => this.setState({userEmail: text})}
           />

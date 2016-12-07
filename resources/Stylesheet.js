@@ -97,6 +97,11 @@ export const styles = StyleSheet.create({
     marginBottom: 20,
     alignSelf: 'center'
   },
+  errorContainer: {
+    backgroundColor: 'red',
+    padding: 16,
+    justifyContent: 'center'
+  },
   column: {
     paddingHorizontal: 12
   },
@@ -242,5 +247,8 @@ export const styles = StyleSheet.create({
   },
   warningText: {
     color: 'red'
+  },
+  errorBoxText: {
+    color: 'white'
   }
 })

@@ -99,6 +99,15 @@ export default class SelectCharacterPage extends Component {
             <Text>Create Character</Text>
           </TouchableOpacity>
         </View>
+
+        <View style={styles.characterPageContainer}>
+          <TouchableOpacity 
+            style={styles.button}
+            onPress={this.props.doLogout.bind(this)}
+          >
+            <Text>Account Logout</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     )
   }

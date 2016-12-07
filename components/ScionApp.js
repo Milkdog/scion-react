@@ -84,7 +84,8 @@ class ScionApp extends Component {
       activePage: 'stats',
       dbRoot: null,
       database: null,
-      character: null
+      character: null,
+      errorMessage: null
     }
   }
 
@@ -132,13 +133,11 @@ class ScionApp extends Component {
       this.setState({
         isDbConnected: (snap.val() === true)
       }) 
-    })
-
-    
+    })    
   }
 
   componentWillUnmount() {
-    firebase.auth().signOut()
+    this.handleLogout()
   }
 
   handlePageUpdate(newPage) {
@@ -148,17 +147,47 @@ class ScionApp extends Component {
   }
 
   handleLogin(userEmail, userPassword) {
-    firebase.auth().signInWithEmailAndPassword(userEmail, userPassword).catch(function(error) {
-      console.log('Auth error', error)
-    }).then((user) => {
-      console.log('Manual logged in', user.uid)
+    const authPromise = firebase.auth().signInWithEmailAndPassword(userEmail, userPassword)
 
-      AsyncStorage.setItem(storageUserEmailKey, userEmail)
-      AsyncStorage.setItem(storageUserPasswordKey, userPassword)
-      
-      this.setState({
-        isLoggedIn: true
+    this.completeAuth(authPromise, userEmail, userPassword)
+  }
+
+  handleLogout() {
+    console.log('User logged out')
+    firebase.auth().signOut()
+
+    this.setState({
+      isLoggedIn: false
+    })
+
+    AsyncStorage.multiRemove([storageUserEmailKey, storageUserPasswordKey])
+  }
+
+  handleCreateAccount(userEmail, userPassword) {
+    const authPromise = firebase.auth().createUserWithEmailAndPassword(userEmail, userPassword)
+
+    this.completeAuth(authPromise, userEmail, userPassword)
+  }
+
+  completeAuth(firebaseAuthPromise, userEmail, userPassword) {
+    const thisComponent = this
+    firebaseAuthPromise.catch(function(error) {
+      console.log('Auth error', error)
+      thisComponent.setState({
+        errorMessage: error.message
       })
+    }).then((user) => {
+      if (user) {
+        console.log('Manual logged in', user.uid)
+
+        AsyncStorage.setItem(storageUserEmailKey, userEmail)
+        AsyncStorage.setItem(storageUserPasswordKey, userPassword)
+        
+        this.setState({
+          errorMessage: null,
+          isLoggedIn: true
+        })
+      }
     })
   }
 
@@ -173,7 +202,13 @@ class ScionApp extends Component {
 
   getPage() {
     if (this.state.character === null) {
-      return <SelectCharacterPage doSetCharacter={this.setCharacter.bind(this)} database={this.state.dbRoot} />
+      return (
+        <SelectCharacterPage 
+          doSetCharacter={this.setCharacter.bind(this)}
+          doLogout={this.handleLogout.bind(this)} 
+          database={this.state.dbRoot} 
+        />
+      )
     }
 
     switch(this.state.activePage) {
@@ -198,6 +233,20 @@ class ScionApp extends Component {
           />
         )
     }
+  }
+
+  getErrorMessage() {
+    if (!this.state.errorMessage) {
+      return null
+    }
+
+    return (
+      <View style={styles.errorContainer}>
+        <Text style={styles.errorBoxText}>
+          {this.state.errorMessage}
+        </Text>
+      </View>
+    )
   }
 
   getTabs() {
@@ -232,7 +281,9 @@ class ScionApp extends Component {
         <View>
           <LoginPage
             doLogin={this.handleLogin.bind(this)}
+            doCreateAccount={this.handleCreateAccount.bind(this)}
           />
+          {this.getErrorMessage()}
         </View>
       )
     }
@@ -250,6 +301,7 @@ class ScionApp extends Component {
         <ScrollView style={styles.mainContainer} contentContainerStyle={styles.mainContent}>
           {this.getPage()}
         </ScrollView>
+        {this.getErrorMessage()}
         <TabBar>
           {this.getTabs()}
         </TabBar>
