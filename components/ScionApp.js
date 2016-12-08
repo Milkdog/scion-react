@@ -283,14 +283,6 @@ class ScionApp extends Component {
       </TouchableOpacity>
     ))
 
-    // displayTabs.push((
-    //   <Image 
-    //     key='save' 
-    //     source={require('./resources/Save-32.png')} 
-    //     style={styles.tabIcon}
-    //   />
-    // ))
-
     return displayTabs
   }
 
@@ -322,6 +314,7 @@ class ScionApp extends Component {
         </ScrollView>
         {this.getErrorMessage()}
         <DiceModal
+          database={this.state.database}
           isVisible={this.state.isDiceVisible}
           dice={10}
           autoSuccess={3}

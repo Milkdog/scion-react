@@ -13,6 +13,7 @@ import { styles } from '../../resources/Stylesheet.js'
 
 import Modal from '../Modal.js'
 import ArmorCard from './ArmorCard.js'
+import StatCard from './StatCard.js'
 
 export default class CombatStatsSection extends Component {
   constructor(props) {
@@ -105,10 +106,10 @@ export default class CombatStatsSection extends Component {
   calculateDamage() {
     const activeWeapon = this.getActiveWeapon()
 
-    return (
-        Number(activeWeapon.damageModifier ? activeWeapon.damageModifier : 0) 
-        + ' ' + activeWeapon.damageType.charAt(0)
-    ) 
+    return {
+      dice: Number(activeWeapon.damageModifier ? activeWeapon.damageModifier : 0),
+      modifier: activeWeapon.damageType.charAt(0)
+    } 
   }
 
   calculateDodgeDv() {    
@@ -145,7 +146,10 @@ export default class CombatStatsSection extends Component {
     )
 
     const autoSuccesses = this.getEpicModifier(this.state.stats.attribute.Wits.epic)
-    return dice + 'd + ' + autoSuccesses
+    return {
+      dice: dice,
+      rawBonus: autoSuccesses
+    }
   }
 
   calculateStaminaSoak() {
@@ -188,10 +192,13 @@ export default class CombatStatsSection extends Component {
     if (this.state.stats.attribute) {
       for (let [ name, stats ] of Object.entries(this.state.stats.attribute)) {
         attributes.push((
-          <View key={name} style={styles.statItem}>
-            <Text style={styles.statName}>{name}</Text>
-            <Text style={styles.statValue}>{stats.rating} ({stats.epic})</Text>
-          </View>
+          <StatCard
+            database={this.props.database} 
+            key={name} 
+            title={name} 
+            rating={stats.rating}
+            epic={stats.epic}
+          />
         ))
       }
     }
@@ -206,10 +213,12 @@ export default class CombatStatsSection extends Component {
       for (let [ name, stats ] of Object.entries(this.state.stats.ability)) {
         if (stats.rating > 0) {
           abilities.push((
-            <View key={name} style={styles.statItem}>
-              <Text style={styles.statName}>{name}</Text>
-              <Text style={styles.statValue}>{stats.rating}</Text>
-            </View>
+            <StatCard
+              database={this.props.database} 
+              key={name} 
+              title={name} 
+              rating={stats.rating}
+            />
           ))
         }
       }
@@ -221,69 +230,94 @@ export default class CombatStatsSection extends Component {
   renderMisc() {
     return [
       (
-        <View key='legend' style={styles.statItem}>
-          <Text style={styles.statName}>Legend</Text>
-          <Text style={styles.statValue}>{this.getRating(this.state.stats.legend)}</Text>
-        </View>
+        <StatCard
+          database={this.props.database} 
+          key='legend' 
+          title='Legend'
+          rating={this.state.stats.legend.rating}
+        />
       ),
       (
-        <View key='willpower' style={styles.statItem}>
-          <Text style={styles.statName}>Willpower</Text>
-          <Text style={styles.statValue}>{this.getRating(this.state.stats.willpower)}</Text>
-        </View>
+        <StatCard
+          database={this.props.database} 
+          key='willpower' 
+          title='Willpower'
+          rating={this.state.stats.willpower.rating}
+        />
       )
     ]
   }
 
   renderCombatStats() {
+    const damage = this.calculateDamage()
+    const joinBattle = this.calculateJoinBattle()
+
     return [
        (
-        <View key='accMelee' style={styles.statItem}>
-          <Text style={styles.statName}>Accuracy (Melee)</Text>
-          <Text style={styles.statValue}>{this.calculateAccuracy('Melee')}</Text>
-        </View>
+        <StatCard
+          database={this.props.database} 
+          key='accMelee' 
+          title='Accuracy (Melee)'
+          rating={this.calculateAccuracy('Melee')}
+        />
       ),
       (
-        <View key='accBrawl' style={styles.statItem}>
-          <Text style={styles.statName}>Accuracy (Brawl)</Text>
-          <Text style={styles.statValue}>{this.calculateAccuracy('Brawl')}</Text>
-        </View>
+        <StatCard
+          database={this.props.database} 
+          key='accBrawl' 
+          title='Accuracy (Brawl)'
+          rating={this.calculateAccuracy('Brawl')}
+        />
       ),
       (
-        <View key='accMarksmanship' style={styles.statItem}>
-          <Text style={styles.statName}>Accuracy (Marksmanship)</Text>
-          <Text style={styles.statValue}>{this.calculateAccuracy('Marksmanship')}</Text>
-        </View>
+        <StatCard
+          database={this.props.database} 
+          key='accMarksmanship' 
+          title='Accuracy (Marksmanship)'
+          rating={this.calculateAccuracy('Marksmanship')}
+        />
       ),
       (
-        <View key='accThrown' style={styles.statItem}>
-          <Text style={styles.statName}>Accuracy (Thrown)</Text>
-          <Text style={styles.statValue}>{this.calculateAccuracy('Thrown')}</Text>
-        </View>
+        <StatCard
+          database={this.props.database} 
+          key='accThrown' 
+          title='Accuracy (Thrown)'
+          rating={this.calculateAccuracy('Thrown')}
+        />
       ),
       (
-        <View key='damage' style={styles.statItem}>
-          <Text style={styles.statName}>Damage</Text>
-          <Text style={styles.statValue}>{this.calculateDamage()}</Text>
-        </View>
+        <StatCard
+          database={this.props.database} 
+          key='damage' 
+          title='Damage'
+          rating={damage.dice}
+          modifier={damage.modifier}
+        />
       ),
       (
-        <View key='dodgeDv' style={styles.statItem}>
-          <Text style={styles.statName}>Dodge DV</Text>
-          <Text style={styles.statValue}>{this.calculateDodgeDv()}</Text>
-        </View>
+        <StatCard
+          database={this.props.database} 
+          key='dodgeDv' 
+          title='Dodge DV'
+          rating={this.calculateDodgeDv()}
+        />
       ),
       (
-        <View key='parryDv' style={styles.statItem}>
-          <Text style={styles.statName}>Parry DV</Text>
-          <Text style={styles.statValue}>{this.calculateParryDv()}</Text>
-        </View>
+        <StatCard
+          database={this.props.database} 
+          key='parryDv' 
+          title='Parry DV'
+          rating={this.calculateParryDv()}
+        />
       ),
       (
-        <View key='joinBattle' style={styles.statItem}>
-          <Text style={styles.statName}>Join Battle</Text>
-          <Text style={styles.statValue}>{this.calculateJoinBattle()}</Text>
-        </View>
+        <StatCard
+          database={this.props.database} 
+          key='joinBattle' 
+          title='Join Battle'
+          rating={joinBattle.dice}
+          rawBonus={joinBattle.rawBonus}
+        />
       )
     ]
   }

@@ -45,10 +45,23 @@ export const styles = StyleSheet.create({
     paddingVertical: 4,
     marginBottom: 8
   },
-  title: {
-    fontSize: 18,
+  diceModalTitle: {
+    fontSize: 14,
     fontWeight: 'bold',
     textAlign: 'center'
+  },
+  diceModalLabel: {
+    fontSize: 10,
+    textAlign: 'center',
+    marginBottom: 8
+  },
+  diceSuccesses: {
+    fontSize: 60,
+    fontWeight: 'bold',
+    textAlign: 'center'
+  },
+  diceModalButton: {
+    marginTop: 8
   },
   cardTitle: {
     fontSize: 18,
@@ -161,6 +174,8 @@ export const styles = StyleSheet.create({
   },
   statItem: {
     width: 180,
+    margin: 1,
+    padding: 1,
     flexDirection: 'row'
   },
   statName: {
@@ -211,6 +226,9 @@ export const styles = StyleSheet.create({
   },
   errorInput: {
     borderColor: 'red'
+  },
+  selectedStat: {
+    backgroundColor: 'aliceblue'
   },
   diceModalContainer: {
     position: 'absolute',

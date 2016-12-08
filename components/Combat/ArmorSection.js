@@ -62,6 +62,10 @@ export default class ArmorSection extends Component {
     })
   }
 
+  componentWillUnmount() {
+    this.props.database.child(this.getStoragePath()).off('value')
+  }
+
   handleToggleModal() {
     this.setState({
       isModalVisible: !this.state.isModalVisible,
